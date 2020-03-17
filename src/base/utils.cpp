@@ -17,45 +17,9 @@
 #include <dirent.h>
 #include <string.h>
 
-#include <common/convert2string.h>
 #include <common/file_system/file_system.h>
 #include <common/file_system/string_path_utils.h>
-#include <common/net/http_client.h>
-#include <common/net/net.h>
 #include <common/sprintf.h>
-
-namespace {
-bool GetHttpHostAndPort(const std::string& host, common::net::HostAndPort* out) {
-  if (host.empty() || !out) {
-    return false;
-  }
-
-  common::net::HostAndPort http_server;
-  size_t del = host.find_last_of(':');
-  if (del != std::string::npos) {
-    http_server.SetHost(host.substr(0, del));
-    std::string port_str = host.substr(del + 1);
-    uint16_t lport;
-    if (common::ConvertFromString(port_str, &lport)) {
-      http_server.SetPort(lport);
-    }
-  } else {
-    http_server.SetHost(host);
-    http_server.SetPort(80);
-  }
-  *out = http_server;
-  return true;
-}
-
-bool GetPostServerFromUrl(const common::uri::Url& url, common::net::HostAndPort* out) {
-  if (!url.IsValid() || !out) {
-    return false;
-  }
-
-  const std::string host_str = url.GetHost();
-  return GetHttpHostAndPort(host_str, out);
-}
-}  // namespace
 
 namespace fastocloud {
 
@@ -168,41 +132,6 @@ void RemoveOldFilesByTime(const common::file_system::ascii_directory_string_path
   }
   closedir(dirp);
   DEBUG_LOG() << "Finished clean up folder: " << path;
-}
-
-common::Error PostHttpFile(const common::file_system::ascii_file_string_path& file_path, const common::uri::Url& url) {
-  common::net::HostAndPort http_server_address;
-  if (!GetPostServerFromUrl(url, &http_server_address)) {
-    return common::make_error_inval();
-  }
-
-  common::net::HttpClient cl(http_server_address);
-  common::ErrnoError errn = cl.Connect();
-  if (errn) {
-    return common::make_error_from_errno(errn);
-  }
-
-  const auto path = url.GetPath();
-  common::Error err = cl.PostFile(path, file_path);
-  if (err) {
-    cl.Disconnect();
-    return err;
-  }
-
-  common::http::HttpResponse lresp;
-  err = cl.ReadResponse(&lresp);
-  if (err) {
-    cl.Disconnect();
-    return err;
-  }
-
-  if (lresp.IsEmptyBody()) {
-    cl.Disconnect();
-    return common::make_error("Empty body");
-  }
-
-  cl.Disconnect();
-  return common::Error();
 }
 
 }  // namespace fastocloud

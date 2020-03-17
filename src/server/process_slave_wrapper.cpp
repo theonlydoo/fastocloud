@@ -24,6 +24,7 @@
 #include <common/daemon/commands/stop_info.h>
 #include <common/file_system/string_path_utils.h>
 #include <common/license/expire_license.h>
+#include <common/net/http_client.h>
 #include <common/net/net.h>
 
 #include "base/config_fields.h"
@@ -973,7 +974,7 @@ common::ErrnoError ProcessSlaveWrapper::HandleRequestClientGetLogStream(Protocol
     if (remote_log_path.GetScheme() == common::uri::Url::http) {
       const auto stream_log_file = MakeStreamLogPath(log_info.GetFeedbackDir());
       if (stream_log_file) {
-        PostHttpFile(*stream_log_file, remote_log_path);
+        common::net::PostHttpFile(*stream_log_file, remote_log_path);
       }
     } else if (remote_log_path.GetScheme() == common::uri::Url::https) {
     }
@@ -1009,7 +1010,7 @@ common::ErrnoError ProcessSlaveWrapper::HandleRequestClientGetPipelineStream(Pro
     if (remote_log_path.GetScheme() == common::uri::Url::http) {
       const auto stream_log_file = MakeStreamPipelinePath(pipeline_info.GetFeedbackDir());
       if (stream_log_file) {
-        PostHttpFile(*stream_log_file, remote_log_path);
+        common::net::PostHttpFile(*stream_log_file, remote_log_path);
       }
     } else if (remote_log_path.GetScheme() == common::uri::Url::https) {
     }
@@ -1234,7 +1235,7 @@ common::ErrnoError ProcessSlaveWrapper::HandleRequestClientGetLogService(Protoco
 
     const auto remote_log_path = get_log_info.GetLogPath();
     if (remote_log_path.GetScheme() == common::uri::Url::http) {
-      PostHttpFile(common::file_system::ascii_file_string_path(config_.log_path), remote_log_path);
+      common::net::PostHttpFile(common::file_system::ascii_file_string_path(config_.log_path), remote_log_path);
     } else if (remote_log_path.GetScheme() == common::uri::Url::https) {
     }
 
