@@ -195,23 +195,10 @@ GstAutoplugSelectResult RelayStream::HandleAutoplugSelect(GstElement* bin,
     return GST_AUTOPLUG_SELECT_TRY;
   }
 
-  const RelayConfig* config = static_cast<const RelayConfig*>(GetConfig());
   gpointer plug_feature = GST_PLUGIN_FEATURE(factory);
   const gchar* factory_name = gst_plugin_feature_get_name(plug_feature);
 
   if (factory_name == kAvdecMpegVideo || factory_name == kAvdecMpeg2Video) {
-    INFO_LOG() << "skip: " << factory_name;
-    return GST_AUTOPLUG_SELECT_SKIP;
-  }
-
-  bool is_need_to_patch = config->IsAvFormat();
-  if (!is_need_to_patch) {
-    return GST_AUTOPLUG_SELECT_TRY;
-  }
-
-  SupportedDemuxer dem;
-  if (elements::ElementTsDemux::GetPluginName() == factory_name && IsDemuxerFromType(type_title, &dem) &&
-      dem == VIDEO_MPEGTS_DEMUXER) {
     INFO_LOG() << "skip: " << factory_name;
     return GST_AUTOPLUG_SELECT_SKIP;
   }

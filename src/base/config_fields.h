@@ -43,7 +43,6 @@
 #define LOGO_FIELD "logo"
 #define RSVG_LOGO_FIELD "rsvg_logo"
 #define LOOP_FIELD "loop"
-#define AVFORMAT_FIELD "avformat"
 #define RESTART_ATTEMPTS_FIELD "restart_attempts"
 #define DELAY_TIME_FIELD "delay_time"
 #define SIZE_FIELD "size"

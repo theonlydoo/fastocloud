@@ -21,7 +21,6 @@
 #define DEFAULT_CHUNK_LIFE_TIME 12 * 3600
 
 #define DEFAULT_LOOP false
-#define DEFAULT_AVFORMAT false
 
 #define TEST_URL "test"
 #define DISPLAY_URL "display"

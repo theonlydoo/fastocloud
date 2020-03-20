@@ -26,7 +26,6 @@ AudioVideoConfig::AudioVideoConfig(const base_class& config)
       have_audio_(true),
       have_subtitle_(false),
       audio_select_(),
-      avformat_(DEFAULT_AVFORMAT),
       loop_(DEFAULT_LOOP) {}
 
 AudioVideoConfig::have_stream_t AudioVideoConfig::HaveVideo() const {
@@ -59,14 +58,6 @@ AudioVideoConfig::audio_select_t AudioVideoConfig::GetAudioSelect() const {
 
 void AudioVideoConfig::SetAudioSelect(audio_select_t sel) {
   audio_select_ = sel;
-}
-
-AudioVideoConfig::avformat_t AudioVideoConfig::IsAvFormat() const {
-  return avformat_;
-}
-
-void AudioVideoConfig::SetIsAvFormat(avformat_t av) {
-  avformat_ = av;
 }
 
 AudioVideoConfig::loop_t AudioVideoConfig::GetLoop() const {

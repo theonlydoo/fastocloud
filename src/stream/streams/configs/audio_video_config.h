@@ -25,7 +25,6 @@ class AudioVideoConfig : public Config {
   typedef Config base_class;
   typedef common::Optional<int> audio_select_t;
   typedef bool loop_t;
-  typedef bool avformat_t;
   typedef bool have_stream_t;
   explicit AudioVideoConfig(const base_class& config);
 
@@ -41,9 +40,6 @@ class AudioVideoConfig : public Config {
   audio_select_t GetAudioSelect() const;
   void SetAudioSelect(audio_select_t sel);
 
-  avformat_t IsAvFormat() const;
-  void SetIsAvFormat(avformat_t av);
-
   loop_t GetLoop() const;
   void SetLoop(loop_t loop);
 
@@ -54,7 +50,6 @@ class AudioVideoConfig : public Config {
   have_stream_t have_audio_;
   have_stream_t have_subtitle_;
   audio_select_t audio_select_;
-  avformat_t avformat_;
   loop_t loop_;
 };
 

@@ -229,12 +229,6 @@ common::Error make_config(const StreamConfig& config_args, Config** config) {
     aconf.SetAudioSelect(audio_select);
   }
 
-  bool avformat;
-  common::Value* avformat_field = config_args->Find(AVFORMAT_FIELD);
-  if (avformat_field && avformat_field->GetAsBoolean(&avformat)) {
-    aconf.SetIsAvFormat(avformat);
-  }
-
   bool loop;
   common::Value* loop_field = config_args->Find(LOOP_FIELD);
   if (loop_field && loop_field->GetAsBoolean(&loop)) {

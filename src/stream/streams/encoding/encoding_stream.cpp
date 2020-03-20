@@ -77,26 +77,12 @@ GstAutoplugSelectResult EncodingStream::HandleAutoplugSelect(GstElement* bin,
                                                              GstElementFactory* factory) {
   UNUSED(bin);
   UNUSED(pad);
+  UNUSED(factory);
 
   std::string type_title;
   std::string type_full;
   if (!get_type_from_caps(caps, &type_title, &type_full)) {
     return GST_AUTOPLUG_SELECT_TRY;
-  }
-
-  const EncodeConfig* config = static_cast<const EncodeConfig*>(GetConfig());
-  gpointer plug_feature = GST_PLUGIN_FEATURE(factory);
-  const gchar* factoryName = gst_plugin_feature_get_name(plug_feature);
-  bool is_need_to_patch = config->IsAvFormat();
-  if (!is_need_to_patch) {
-    return GST_AUTOPLUG_SELECT_TRY;
-  }
-
-  SupportedDemuxer dem;
-  if (elements::ElementTsDemux::GetPluginName() == factoryName && IsDemuxerFromType(type_title, &dem) &&
-      dem == VIDEO_MPEGTS_DEMUXER) {
-    INFO_LOG() << "skip: " << factoryName;
-    return GST_AUTOPLUG_SELECT_SKIP;
   }
 
   return GST_AUTOPLUG_SELECT_TRY;
@@ -250,7 +236,7 @@ void EncodingStream::OnMLElementCreated(elements::machine_learning::ElementVideo
   ignore_result(machine->RegisterNewPredictionCallback(&EncodingStream::new_prediction_callback, this));
 }
 
-void EncodingStream::HandleMlNotification(const std::vector<fastotv::commands_info::ml::ImageBox> &images) {
+void EncodingStream::HandleMlNotification(const std::vector<fastotv::commands_info::ml::ImageBox>& images) {
   if (client_) {
     client_->OnMlNotification(this, images);
   }
