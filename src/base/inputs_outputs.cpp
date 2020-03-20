@@ -34,7 +34,7 @@ bool ConvertFromString(common::ArrayValue* output_urls, fastocloud::output_t* ou
     common::Value* url = nullptr;
     common::HashValue* url_hash = nullptr;
     if (output_urls->Get(i, &url) && url->GetAsHash(&url_hash)) {
-      const auto murl = OutputUri::MakeUrl(url_hash);
+      const auto murl = OutputUri::Make(url_hash);
       if (murl) {
         output.push_back(*murl);
       }
@@ -54,7 +54,7 @@ bool ConvertFromString(common::ArrayValue* input_urls, fastocloud::input_t* out)
     common::Value* url = nullptr;
     common::HashValue* url_hash = nullptr;
     if (input_urls->Get(i, &url) && url->GetAsHash(&url_hash)) {
-      const auto murl = InputUri::MakeUrl(url_hash);
+      const auto murl = InputUri::Make(url_hash);
       if (murl) {
         input.push_back(*murl);
       }
