@@ -68,7 +68,7 @@ Element* setup_encoder_str_params(const video_encoders_str_args_t& video_str_arg
 
     std::string param = key.substr(pos + 1);
     std::string value = it->second;
-    DEBUG_LOG() << "Installing parametr for " << enc_name << "," << param << " = " << value;
+    DEBUG_LOG() << "Installing parametr for " << enc_name << "." << param << " = " << value;
     if (key == X264_ENC_PARAM("profile")) {
       GstCaps* capsavc = gst_caps_new_simple("video/x-h264", "profile", G_TYPE_STRING, value.c_str(), nullptr);
       ElementCapsFilter* caps =
@@ -82,6 +82,15 @@ Element* setup_encoder_str_params(const video_encoders_str_args_t& video_str_arg
       GstCaps* capsavc = gst_caps_new_simple("video/x-h264", "stream-format", G_TYPE_STRING, value.c_str(), nullptr);
       ElementCapsFilter* caps =
           new ElementCapsFilter(common::MemSPrintf(VIDEO_X264ENC_CAPS_FILTER_STREAM_FORMAT_NAME_1U, encoder_id));
+      linker->ElementAdd(caps);
+      caps->SetCaps(capsavc);
+      gst_caps_unref(capsavc);
+      linker->ElementLink(last, caps);
+      last = caps;
+    } else if (key == X264_ENC_PARAM("tune")) {
+      GstCaps* capsavc = gst_caps_new_simple("video/x-h264", "tune", G_TYPE_STRING, value.c_str(), nullptr);
+      ElementCapsFilter* caps =
+          new ElementCapsFilter(common::MemSPrintf(VIDEO_X264ENC_CAPS_FILTER_TUNE_NAME_1U, encoder_id));
       linker->ElementAdd(caps);
       caps->SetCaps(capsavc);
       gst_caps_unref(capsavc);

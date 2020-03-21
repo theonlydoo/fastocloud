@@ -58,6 +58,7 @@
 #define VIDEO_CAPS_DEVICE_NAME_1U "video_caps_device_%lu"
 #define VIDEO_SCALE_CAPS_FILTER_NAME_1U "videoscale_capsfilter_%lu"
 #define VIDEO_X264ENC_CAPS_FILTER_STREAM_FORMAT_NAME_1U "x264enc_capsfilter_stream_format_%lu"
+#define VIDEO_X264ENC_CAPS_FILTER_TUNE_NAME_1U "x264enc_capsfilter_tune_%lu"
 #define VIDEO_X264ENC_CAPS_FILTER_PROFILE_NAME_1U "x264enc_capsfilter_profile_%lu"
 #define VIDEO_SCALE_NAME_1U "videoscale_%lu"
 #define VIDEO_BOX_NAME_1U "videobox_%lu"
