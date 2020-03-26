@@ -33,9 +33,6 @@ class PrepareInfo : public common::serializer::JsonSerializer<PrepareInfo> {
   std::string GetFeedbackDirectory() const;
   std::string GetTimeshiftsDirectory() const;
   std::string GetHlsDirectory() const;
-  std::string GetPlaylistsDirectory() const;
-  std::string GetDvbDirectory() const;
-  std::string GetCaptureDirectory() const;
   std::string GetVodsInDirectory() const;
   std::string GetVodsDirectory() const;
   std::string GetCodsDirectory() const;
@@ -48,9 +45,6 @@ class PrepareInfo : public common::serializer::JsonSerializer<PrepareInfo> {
   std::string feedback_directory_;
   std::string timeshifts_directory_;
   std::string hls_directory_;
-  std::string playlists_directory_;
-  std::string dvb_directory_;
-  std::string capture_card_directory_;
   std::string vods_in_directory_;
   std::string vods_directory_;
   std::string cods_directory_;
@@ -75,9 +69,6 @@ struct Directories {
   const DirectoryState feedback_dir;
   const DirectoryState timeshift_dir;
   const DirectoryState hls_dir;
-  const DirectoryState playlist_dir;
-  const DirectoryState dvb_dir;
-  const DirectoryState capture_card_dir;
   DirectoryState vods_in_dir;
   const DirectoryState vods_dir;
   const DirectoryState cods_dir;

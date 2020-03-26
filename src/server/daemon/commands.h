@@ -38,8 +38,7 @@
 #define DAEMON_ACTIVATE "activate_request"  // {"key": "XXXXXXXXXXXXXXXXXX"}
 #define DAEMON_STOP_SERVICE "stop_service"  // {"delay": 0 }
 #define DAEMON_PREPARE_SERVICE \
-  "prepare_service"  // { "feedback_directory": "", "timeshifts_directory": "", "hls_directory": "",
-                     // "playlists_directory": "", "dvb_directory": "", "capture_card_directory": "" }
+  "prepare_service"  // { "feedback_directory": "", "timeshifts_directory": "", "hls_directory": "" }
 #define DAEMON_SYNC_SERVICE "sync_service"
 #define DAEMON_PING_SERVICE "ping_service"
 #define DAEMON_GET_LOG_SERVICE "get_log_service"  // {"path":"http://localhost/service/id"}
@@ -62,7 +61,8 @@ namespace server {
 common::Error ChangedSourcesStreamBroadcast(const ChangedSouresInfo& params, fastotv::protocol::request_t* req);
 common::Error StatisitcStreamBroadcast(const StatisticInfo& params, fastotv::protocol::request_t* req);
 #if defined(MACHINE_LEARNING)
-common::Error MlNotificationStreamBroadcast(const fastotv::commands_info::ml::NotificationInfo& params, fastotv::protocol::request_t* req);
+common::Error MlNotificationStreamBroadcast(const fastotv::commands_info::ml::NotificationInfo& params,
+                                            fastotv::protocol::request_t* req);
 #endif
 common::Error StatisitcServiceBroadcast(fastotv::protocol::serializet_params_t params,
                                         fastotv::protocol::request_t* req);
