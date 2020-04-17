@@ -178,15 +178,9 @@ common::Error make_config(const StreamConfig& config_args, Config** config) {
     return common::make_error("Define " INPUT_FIELD " variable and make it valid");
   }
 
-  bool is_multi_input = input_urls.size() > 1;
-  bool is_timeshift_and_rec = (stream_type == fastotv::TIMESHIFT_RECORDER && !is_multi_input) ||
-                              (stream_type == fastotv::CATCHUP && !is_multi_input);
-
   output_t output_urls;
-  if (!is_timeshift_and_rec) {
-    if (!read_output(config_args, &output_urls)) {
-      return common::make_error("Define " OUTPUT_FIELD " variable and make it valid");
-    }
+  if (!read_output(config_args, &output_urls)) {
+    return common::make_error("Define " OUTPUT_FIELD " variable and make it valid");
   }
 
   int max_restart_attempts;
