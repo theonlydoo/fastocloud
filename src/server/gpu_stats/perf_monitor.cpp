@@ -14,6 +14,8 @@
 
 #include "server/gpu_stats/perf_monitor.h"
 
+#include <common/macros.h>
+
 #ifdef HAVE_NVML
 #include "server/gpu_stats/nvidia_monitor.h"
 #endif
@@ -49,6 +51,9 @@ namespace gpu_stats {
 IPerfMonitor::~IPerfMonitor() {}
 
 IPerfMonitor* CreatePerfMonitor(int* load) {
+#if !defined(HAVE_NVML) && !defined(HAVE_CTT_METRICS)
+  UNUSED(load);
+#endif
   if (IsNvidiaGpuAvailable()) {
 #if defined(HAVE_NVML)
     return new NvidiaMonitor(load);

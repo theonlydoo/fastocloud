@@ -14,6 +14,8 @@
 
 #include "stream/streams/builders/src_decodebin_stream_builder.h"
 
+#include <string>
+
 #include <common/sprintf.h>
 
 #include "stream/ibase_stream.h"

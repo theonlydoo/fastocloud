@@ -32,8 +32,8 @@
 #define STATISTIC_SERVICE_INFO_ONLINE_USERS_FIELD "online_users"
 
 #define FULL_SERVICE_INFO_OS_FIELD "os"
-#define FULL_SERVICE_INFO_VERSION_FIELD "version"
 #define FULL_SERVICE_INFO_PROJECT_FIELD "project"
+#define FULL_SERVICE_INFO_VERSION_FIELD "version"
 #define FULL_SERVICE_INFO_HTTP_HOST_FIELD "http_host"
 #define FULL_SERVICE_INFO_VODS_HOST_FIELD "vods_host"
 #define FULL_SERVICE_INFO_CODS_HOST_FIELD "cods_host"
@@ -306,6 +306,10 @@ common::net::HostAndPort FullServiceInfo::GetCodsHost() const {
   return cods_host_;
 }
 
+std::string FullServiceInfo::GetProject() const {
+  return project_;
+}
+
 std::string FullServiceInfo::GetProjectVersion() const {
   return proj_ver_;
 }
@@ -359,16 +363,16 @@ common::Error FullServiceInfo::DoDeSerialize(json_object* serialized) {
     inf.exp_time_ = json_object_get_int64(jexp);
   }
 
-  json_object* jproj = nullptr;
-  json_bool jproj_exists = json_object_object_get_ex(serialized, FULL_SERVICE_INFO_PROJECT_FIELD, &jproj);
-  if (jproj_exists) {
-    inf.project_ = json_object_get_string(jproj);
-  }
-
   json_object* jproj_ver = nullptr;
   json_bool jproj_ver_exists = json_object_object_get_ex(serialized, FULL_SERVICE_INFO_VERSION_FIELD, &jproj_ver);
   if (jproj_ver_exists) {
     inf.proj_ver_ = json_object_get_string(jproj_ver);
+  }
+
+  json_object* jproj = nullptr;
+  json_bool jproj_exists = json_object_object_get_ex(serialized, FULL_SERVICE_INFO_PROJECT_FIELD, &jproj);
+  if (jproj_exists) {
+    inf.project_ = json_object_get_string(jproj);
   }
 
   *this = inf;
@@ -389,8 +393,8 @@ common::Error FullServiceInfo::SerializeFields(json_object* out) const {
   json_object_object_add(out, FULL_SERVICE_INFO_VODS_HOST_FIELD, json_object_new_string(vods_host_str.c_str()));
   json_object_object_add(out, FULL_SERVICE_INFO_CODS_HOST_FIELD, json_object_new_string(cods_host_str.c_str()));
   json_object_object_add(out, FULL_SERVICE_INFO_EXPIRATION_TIME_FIELD, json_object_new_int64(exp_time_));
-  json_object_object_add(out, FULL_SERVICE_INFO_PROJECT_FIELD, json_object_new_string(project_.c_str()));
   json_object_object_add(out, FULL_SERVICE_INFO_VERSION_FIELD, json_object_new_string(proj_ver_.c_str()));
+  json_object_object_add(out, FULL_SERVICE_INFO_PROJECT_FIELD, json_object_new_string(project_.c_str()));
   json_object_object_add(out, FULL_SERVICE_INFO_OS_FIELD, jos);
   return base_class::SerializeFields(out);
 }

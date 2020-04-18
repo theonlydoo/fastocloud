@@ -14,6 +14,8 @@
 
 #pragma once
 
+#include <string>
+
 #include <common/macros.h>
 
 #include "base/inputs_outputs.h"

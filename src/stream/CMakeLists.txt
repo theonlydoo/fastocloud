@@ -16,6 +16,7 @@ SET(GLOBAL_HEADERS
   ${CMAKE_SOURCE_DIR}/src/stream/stream_server.h
 
   ${CMAKE_SOURCE_DIR}/src/stream/stream_wrapper.h
+  ${CMAKE_SOURCE_DIR}/src/stream/gstreamer_init.h
   ${CMAKE_SOURCE_DIR}/src/stream/gstreamer_utils.h
   ${CMAKE_SOURCE_DIR}/src/stream/streams_factory.h
   ${CMAKE_SOURCE_DIR}/src/stream/configs_factory.h
@@ -37,6 +38,7 @@ SET(GLOBAL_SOURCES
   ${CMAKE_SOURCE_DIR}/src/stream/stream_controller.cpp
   ${CMAKE_SOURCE_DIR}/src/stream/stream_server.cpp
   ${CMAKE_SOURCE_DIR}/src/stream/stream_wrapper.cpp
+  ${CMAKE_SOURCE_DIR}/src/stream/gstreamer_init.cpp
   ${CMAKE_SOURCE_DIR}/src/stream/gstreamer_utils.cpp
 
   ${CMAKE_SOURCE_DIR}/src/stream/streams_factory.cpp

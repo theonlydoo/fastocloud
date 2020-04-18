@@ -42,9 +42,6 @@ class Config;
 
 enum ExitStatus { EXIT_SELF, EXIT_INNER };
 
-void streams_init(int argc, char** argv, EncoderType enc = CPU);
-void streams_deinit();
-
 class IBaseStream : public common::IMetaClassInfo, public IBaseBuilderObserver {
  public:
   class IStreamClient {
@@ -63,7 +60,8 @@ class IBaseStream : public common::IMetaClassInfo, public IBaseBuilderObserver {
     virtual void OnInputChanged(IBaseStream* stream, const InputUri& uri) = 0;
     virtual void OnPipelineCreated(IBaseStream* stream) = 0;
 #if defined(MACHINE_LEARNING)
-    virtual void OnMlNotification(IBaseStream* stream, const std::vector<fastotv::commands_info::ml::ImageBox>& images) = 0;
+    virtual void OnMlNotification(IBaseStream* stream,
+                                  const std::vector<fastotv::commands_info::ml::ImageBox>& images) = 0;
 #endif
     virtual ~IStreamClient();
   };

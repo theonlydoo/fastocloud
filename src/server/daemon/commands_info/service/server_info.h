@@ -102,6 +102,8 @@ class FullServiceInfo : public ServerInfo {
   common::net::HostAndPort GetHttpHost() const;
   common::net::HostAndPort GetVodsHost() const;
   common::net::HostAndPort GetCodsHost() const;
+
+  std::string GetProject() const;
   std::string GetProjectVersion() const;
 
  protected:

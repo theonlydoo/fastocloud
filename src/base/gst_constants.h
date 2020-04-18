@@ -186,6 +186,8 @@
 #define TS_PARSE "tsparse"
 #define AVDEC_H264 "avdec_h264"
 #define TS_DEMUX "tsdemux"
+#define TS_DEMUX_PARAM(x) TS_DEMUX "." x
+#define TS_DEMUX_PROGRAM_NUMBER TS_DEMUX_PARAM("program-number")
 
 #define AVDEC_AC3 "avdec_ac3"
 #define AVDEC_AC3_FIXED "avdec_ac3_fixed"

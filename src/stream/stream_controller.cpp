@@ -122,7 +122,12 @@ common::Error StreamController::Init(const StreamConfig& config_args) {
     }
   }
 
-  streams_init(0, nullptr, enc);
+  init_.Init(0, nullptr, enc);
+  if (enc == GPU_NVIDIA) {
+    /*if (!init_.SetPluginAsPrimary("nvdec", 10)) {
+      WARNING_LOG() << "Failed to update nvdec priority";
+    }*/
+  }
   return common::Error();
 }
 
@@ -131,7 +136,7 @@ StreamController::~StreamController() {
   ev_thread_.join();
 
   destroy(&loop_);
-  streams_deinit();
+  init_.Deinit();
   destroy(&config_);
 }
 
@@ -479,14 +484,15 @@ void StreamController::OnSyncMessageReceived(IBaseStream* stream, GstMessage* me
   UNUSED(message);
 }
 
-void StreamController::OnInputChanged(IBaseStream *stream, const InputUri& uri) {
+void StreamController::OnInputChanged(IBaseStream* stream, const InputUri& uri) {
   UNUSED(stream);
   ChangedSouresInfo ch(mem_->id, uri);
   static_cast<StreamServer*>(loop_)->SendChangeSourcesBroadcast(ch);
 }
 
 #if defined(MACHINE_LEARNING)
-void StreamController::OnMlNotification(IBaseStream* stream, const std::vector<fastotv::commands_info::ml::ImageBox> &images) {
+void StreamController::OnMlNotification(IBaseStream* stream,
+                                        const std::vector<fastotv::commands_info::ml::ImageBox>& images) {
   UNUSED(stream);
   fastotv::commands_info::ml::NotificationInfo notif(mem_->id, images);
   static_cast<StreamServer*>(loop_)->SendMlNotificationBroadcast(notif);

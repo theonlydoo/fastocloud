@@ -129,9 +129,9 @@ common::Error ActivateResponseFail(fastotv::protocol::sequance_id_t id,
   return common::Error();
 }
 
-common::Error StateServiceResponse(fastotv::protocol::sequance_id_t id,
-                                   const std::string& result,
-                                   fastotv::protocol::response_t* resp) {
+common::Error PrepareServiceResponse(fastotv::protocol::sequance_id_t id,
+                                     const std::string& result,
+                                     fastotv::protocol::response_t* resp) {
   if (!resp) {
     return common::make_error_inval();
   }

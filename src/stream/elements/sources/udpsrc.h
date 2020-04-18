@@ -33,9 +33,12 @@ class ElementUDPSrc : public ElementPushSrc<ELEMENT_UDP_SRC> {
   void SetAddress(const std::string& host);
   void SetPort(uint16_t port);
   void SetUri(const std::string& uri = "udp://0.0.0.0:5004");  // String. Default: "udp://0.0.0.0:5004"
+  void SetMulticastIface(const std::string& iface);            // multicast-iface=10.100.200.10
 };
 
-ElementUDPSrc* make_udp_src(const common::net::HostAndPort& host, element_id_t input_id);
+ElementUDPSrc* make_udp_src(const common::net::HostAndPort& host,
+                            common::Optional<std::string> iface,
+                            element_id_t input_id);
 
 }  // namespace sources
 }  // namespace elements

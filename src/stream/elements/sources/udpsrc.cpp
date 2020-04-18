@@ -31,10 +31,19 @@ void ElementUDPSrc::SetPort(uint16_t port) {
   SetProperty("port", port);
 }
 
-ElementUDPSrc* make_udp_src(const common::net::HostAndPort& host, element_id_t input_id) {
+void ElementUDPSrc::SetMulticastIface(const std::string& iface) {
+  SetProperty("multicast-iface", iface);
+}
+
+ElementUDPSrc* make_udp_src(const common::net::HostAndPort& host,
+                            common::Optional<std::string> iface,
+                            element_id_t input_id) {
   ElementUDPSrc* udpsrc = make_sources<ElementUDPSrc>(input_id);
   udpsrc->SetAddress(host.GetHost());
   udpsrc->SetPort(host.GetPort());
+  if (iface) {
+    udpsrc->SetMulticastIface(*iface);
+  }
   return udpsrc;
 }
 

@@ -12,36 +12,23 @@
     along with fastocloud.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#pragma once
+
 #include "stream/gst_types.h"
 
-#include "base/gst_constants.h"
+#include <string>  // for string
 
 namespace fastocloud {
 namespace stream {
 
-bool GetEncoderType(const std::string& encoder, EncoderType* enc) {
-  if (encoder.empty() || !enc) {
-    return false;
-  }
+class GstInitializer {
+ public:
+  GstInitializer();
+  void Init(int argc, char** argv, EncoderType enc);
+  void Deinit();
 
-  if (encoder == MFX_H264_ENC) {
-    *enc = GPU_MFX;
-    return true;
-  }
-
-  if (encoder == VAAPI_H264_ENC || encoder == VAAPI_MPEG2_ENC) {
-    *enc = GPU_VAAPI;
-    return true;
-  }
-
-  if (encoder == NV_H264_ENC || encoder == NV_H265_ENC) {
-    *enc = GPU_NVIDIA;
-    return true;
-  }
-
-  *enc = CPU;
-  return true;
-}
+  bool SetPluginAsPrimary(const std::string& plugin, int priority);
+};
 
 }  // namespace stream
 }  // namespace fastocloud

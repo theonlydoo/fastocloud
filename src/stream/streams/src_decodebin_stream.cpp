@@ -14,6 +14,8 @@
 
 #include "stream/streams/src_decodebin_stream.h"
 
+#include <string>
+
 #include "stream/config.h"
 #include "stream/pad/pad.h"
 
@@ -93,6 +95,24 @@ GValueArray* SrcDecodeBinStream::decodebin_autoplug_sort_callback(GstElement* bi
 
 void SrcDecodeBinStream::decodebin_element_added_callback(GstBin* bin, GstElement* element, gpointer user_data) {
   SrcDecodeBinStream* stream = reinterpret_cast<SrcDecodeBinStream*>(user_data);
+  const std::string element_plugin_name = elements::Element::GetPluginName(element);
+  if (element_plugin_name == elements::ElementTsDemux::GetPluginName()) {
+    const auto config = stream->GetConfig();
+    input_t input = config->GetInput();
+    for (size_t i = 0; i < input.size(); ++i) {
+      common::uri::Url input_url = input[i].GetInput();
+      common::uri::Url::scheme sh = input_url.GetScheme();
+      if (sh == common::uri::Url::udp) {
+        const auto pid = input[i].GetProgramNumber();
+        if (pid) {
+          elements::ElementTsDemux* tsdemux = new elements::ElementTsDemux("demux", element);
+          tsdemux->SetProgramNumber(*pid);
+          delete tsdemux;
+        }
+      }
+    }
+  }
+
   return stream->HandleDecodeBinElementAdded(bin, element);
 }
 

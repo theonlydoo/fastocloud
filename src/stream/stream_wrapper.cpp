@@ -41,6 +41,11 @@ int start_stream(const std::string& process_name,
   }
   NOTICE_LOG() << "Running " PROJECT_VERSION_HUMAN;
 
+  for (auto it = config_args->begin(); it != config_args->end(); ++it) {
+    common::Value* val = it->second;
+    DEBUG_LOG() << it->first << ": " << *val;
+  }
+
   const std::unique_ptr<fastocloud::StreamStruct> mem(new fastocloud::StreamStruct(sha));
   fastocloud::stream::StreamController proc(feedback_dir, streamlink_path, command_client, mem.get());
   common::Error err = proc.Init(config_args);

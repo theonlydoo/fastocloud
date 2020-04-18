@@ -1061,7 +1061,7 @@ common::ErrnoError ProcessSlaveWrapper::HandleRequestClientPrepareService(Protoc
 
     service::Directories dirs(state_info);
     std::string resp_str = service::MakeDirectoryResponce(dirs);
-    return dclient->StateServiceSuccess(req->id, resp_str);
+    return dclient->PrepareServiceSuccess(req->id, resp_str);
   }
 
   return common::make_errno_error_inval();

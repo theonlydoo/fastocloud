@@ -534,7 +534,8 @@ bool FindOption(const std::string& key, option_t* opt) {
     {EAVC_ENC_DEBLOCK_BETA, dummy_validator_integer},
     {EAVC_ENC_INITIAL_DELAY, dummy_validator_integer},
     {EAVC_ENC_FIELD_ORDER, dummy_validator_integer},
-    {EAVC_ENC_GOP_ADAPTIVE, dont_validate}
+    {EAVC_ENC_GOP_ADAPTIVE, dont_validate},
+    {TS_DEMUX_PROGRAM_NUMBER, dont_validate},
   };
   for (const option_t& cur : ALLOWED_OPTIONS) {
     if (cur.first == key) {

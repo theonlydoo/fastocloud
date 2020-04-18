@@ -32,7 +32,7 @@ struct Connector {
   elements::Element* subtitle;
 };
 
-enum EncoderType { GPU_MFX, GPU_VAAPI, CPU };
+enum EncoderType { GPU_MFX, GPU_VAAPI, GPU_NVIDIA, CPU };
 
 bool GetEncoderType(const std::string& encoder, EncoderType* enc);
 

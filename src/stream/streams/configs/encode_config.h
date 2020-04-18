@@ -26,8 +26,6 @@
 
 #include "stream/streams/configs/audio_video_config.h"
 
-#include "stream/stypes.h"
-
 namespace fastocloud {
 namespace stream {
 namespace streams {

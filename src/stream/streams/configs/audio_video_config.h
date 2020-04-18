@@ -16,6 +16,8 @@
 
 #include "stream/config.h"
 
+#include "stream/stypes.h"
+
 namespace fastocloud {
 namespace stream {
 namespace streams {

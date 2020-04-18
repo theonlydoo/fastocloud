@@ -68,7 +68,7 @@ Element* make_src(const InputUri& uri, element_id_t input_id, gint timeout_secs)
       NOTREACHED() << "Unknown input url: " << host_str;
       return nullptr;
     }
-    return make_udp_src(host, input_id);
+    return make_udp_src(host, uri.GetMulticastIface(), input_id);
   } else if (scheme == common::uri::Url::rtmp) {
     return make_rtmp_src(url.GetUrl(), timeout_secs, input_id);
   } else if (scheme == common::uri::Url::tcp) {

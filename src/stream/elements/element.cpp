@@ -226,6 +226,24 @@ void ElementDecodebin::SetUseBuffering(bool use_buffering) {
   SetProperty("use-buffering", use_buffering);
 }
 
+void ElementDecodebin::SetMaxSizeBuffers(guint val) {
+  SetProperty("max-size-buffers", val);
+}
+
+void ElementDecodebin::SetMaxSizeTime(guint val) {
+  SetProperty("max-size-time", val);
+}
+
+void ElementDecodebin::SetMaxSizeBytes(guint64 val) {
+  SetProperty("max-size-bytes", val);
+}
+
+void ElementDecodebin::SetEmpty() {
+  SetMaxSizeBuffers(0);
+  SetMaxSizeTime(0);
+  SetMaxSizeBytes(0);
+}
+
 gboolean ElementDecodebin::RegisterAutoplugContinue(autoplug_continue_callback_t cb, gpointer user_data) {
   return RegisterCallback("autoplug-continue", G_CALLBACK(cb), user_data);
 }
@@ -248,6 +266,12 @@ void ElementQueue::SetMaxSizeTime(guint val) {
 
 void ElementQueue::SetMaxSizeBytes(guint64 val) {
   SetProperty("max-size-bytes", val);
+}
+
+void ElementQueue::SetEmpty() {
+  SetMaxSizeBuffers(0);
+  SetMaxSizeTime(0);
+  SetMaxSizeBytes(0);
 }
 
 void ElementCapsFilter::SetCaps(GstCaps* caps) {
@@ -344,6 +368,10 @@ void ElementMFXH264Decode::SetLiveMode(bool mode) {
 
 void ElementTsDemux::SetParsePrivateSections(gboolean parse_private_sections) {
   SetProperty("parse-private-sections", parse_private_sections);
+}
+
+void ElementTsDemux::SetProgramNumber(gint number) {
+  SetProperty("program-number", number);
 }
 
 DECLARE_ELEMENT_TRAITS_SPECIALIZATION(DECODEBIN)

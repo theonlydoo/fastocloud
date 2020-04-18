@@ -14,10 +14,7 @@
 
 #pragma once
 
-#include <string>
 #include <vector>
-
-#include <common/macros.h>
 
 #include "base/channel_stats.h"
 #include "base/input_uri.h"

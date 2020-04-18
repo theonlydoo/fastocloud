@@ -16,6 +16,7 @@
 
 #include <string>
 #include <thread>
+#include <vector>
 
 #include <common/libev/io_loop.h>
 #include <common/libev/io_loop_observer.h>
@@ -26,6 +27,7 @@
 #include <fastotv/protocol/types.h>
 
 #include "base/stream_config.h"
+#include "stream/gstreamer_init.h"
 #include "stream/ibase_stream.h"
 #include "stream/timeshift.h"
 
@@ -121,6 +123,8 @@ class StreamController : public common::libev::IoLoopObserver, public IBaseStrea
   //
   IBaseStream* origin_;
   std::unique_ptr<common::process::ProcessMetrics> process_metrics_;
+
+  GstInitializer init_;
 };
 
 }  // namespace stream

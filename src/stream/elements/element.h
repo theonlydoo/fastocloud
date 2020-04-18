@@ -280,6 +280,12 @@ class ElementDecodebin : public ElementBinEx<ELEMENT_DECODEBIN> {
 
   void SetUseBuffering(bool use_buffering = false);  // Default: false
 
+  void SetMaxSizeBuffers(guint val = 200);         // 0 - 4294967295 Default: 200
+  void SetMaxSizeTime(guint val = 10485760);       // 0 - 4294967295 Default: 10485760
+  void SetMaxSizeBytes(guint64 val = 1000000000);  // 0 - 18446744073709551615 Default: 1000000000
+
+  void SetEmpty();
+
   gboolean RegisterAutoplugContinue(autoplug_continue_callback_t cb, gpointer user_data) WARN_UNUSED_RESULT;
   gboolean RegisterAutoplugSelect(autoplug_select_callback_t cb, gpointer user_data) WARN_UNUSED_RESULT;
   gboolean RegisterAutoplugSort(autoplug_sort_callback_t cb, gpointer user_data) WARN_UNUSED_RESULT;
@@ -371,6 +377,7 @@ class ElementTsDemux : public ElementBinEx<ELEMENT_TS_DEMUX> {
   using base_class::base_class;
 
   void SetParsePrivateSections(gboolean parse_private_sections = true);  // Default value: true
+  void SetProgramNumber(gint number);                                    // -1 - 2147483647 Default: -1
 };
 
 // common elements
@@ -382,6 +389,8 @@ class ElementQueue : public ElementEx<ELEMENT_QUEUE> {
   void SetMaxSizeBuffers(guint val = 200);         // 0 - 4294967295 Default: 200
   void SetMaxSizeTime(guint val = 10485760);       // 0 - 4294967295 Default: 10485760
   void SetMaxSizeBytes(guint64 val = 1000000000);  // 0 - 18446744073709551615 Default: 1000000000
+
+  void SetEmpty();
 };
 
 class ElementQueue2 : public ElementEx<ELEMENT_QUEUE2> {

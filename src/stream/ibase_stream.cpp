@@ -14,10 +14,6 @@
 
 #include "stream/ibase_stream.h"
 
-#ifdef HAVE_X11
-#include <X11/Xlib.h>
-#endif
-
 #include <gst/base/gstbasesrc.h>  // for GstBaseSrc
 #include <gst/video/video.h>
 
@@ -42,11 +38,6 @@
 #define MIN_OUT_DATA(SEC) 4 * 1024 * SEC  // 4 kBps
 #define MIN_IN_DATA(SEC) 4 * 1024 * SEC   // 4 kBps
 #define DEFAULT_FRAMERATE 25
-#define MFX_ENV "iHD"
-#define MFX_DRIVER_PATH "/usr/local/lib/dri/"
-
-#define VAAPI_I965_ENV "i965"
-#define VAAPI_I965_DRIVER_PATH "/usr/local/lib/dri/"
 
 #if defined(OS_WIN)
 int setenv(const char* key, const char* value, int set) {
@@ -78,98 +69,10 @@ struct ctx_holder {
   }
 };
 
-void RedirectGstLog(GstDebugCategory* category,
-                    GstDebugLevel level,
-                    const gchar* file,
-                    const gchar* function,
-                    gint line,
-                    GObject* object,
-                    GstDebugMessage* message,
-                    gpointer data) {
-  UNUSED(data);
-  UNUSED(object);
-  UNUSED(message);
-  UNUSED(category);
-
-  if (level == GST_LEVEL_ERROR) {
-    ERROR_LOG() << gst_debug_category_get_name(category) << " " << file << ":" << line << " " << function << " "
-                << gst_debug_message_get(message);
-  } else if (level == GST_LEVEL_WARNING) {
-    WARNING_LOG() << gst_debug_category_get_name(category) << " " << file << ":" << line << " " << function << " "
-                  << gst_debug_message_get(message);
-  } else if (level == GST_LEVEL_FIXME) {
-    NOTICE_LOG() << gst_debug_category_get_name(category) << " " << file << ":" << line << " " << function << " "
-                 << gst_debug_message_get(message);
-  } else if (level == GST_LEVEL_INFO) {
-    INFO_LOG() << gst_debug_category_get_name(category) << " " << file << ":" << line << " " << function << " "
-               << gst_debug_message_get(message);
-  } else if (level == GST_LEVEL_LOG) {
-    INFO_LOG() << gst_debug_category_get_name(category) << " " << file << ":" << line << " " << function << " "
-               << gst_debug_message_get(message);
-  } else if (level == GST_LEVEL_DEBUG) {
-    DEBUG_LOG() << gst_debug_category_get_name(category) << " " << file << ":" << line << " " << function << " "
-                << gst_debug_message_get(message);
-  }
-}
-
 }  // namespace
 
 namespace fastocloud {
 namespace stream {
-
-void streams_init(int argc, char** argv, EncoderType enc) {
-  if (gst_is_initialized()) {
-    return;
-  }
-
-#ifdef HAVE_X11
-  XInitThreads();
-#endif
-
-  if (enc == GPU_MFX) {
-    int res = setenv("LIBVA_DRIVER_NAME", MFX_ENV, 1);
-    if (res == ERROR_RESULT_VALUE) {
-      WARNING_LOG() << "Failed to set enviroment variable LIBVA_DRIVER_NAME to " MFX_ENV;
-    }
-    res = setenv("LIBVA_DRIVERS_PATH", MFX_DRIVER_PATH, 1);
-    if (res == ERROR_RESULT_VALUE) {
-      WARNING_LOG() << "Failed to set enviroment variable LIBVA_DRIVERS_PATH "
-                       "to " MFX_DRIVER_PATH;
-    }
-  } else if (enc == GPU_VAAPI) {
-    int res = setenv("LIBVA_DRIVER_NAME", VAAPI_I965_ENV, 1);
-    if (res == ERROR_RESULT_VALUE) {
-      WARNING_LOG() << "Failed to set enviroment variable LIBVA_DRIVER_NAME "
-                       "to " VAAPI_I965_ENV;
-    }
-    res = setenv("LIBVA_DRIVERS_PATH", VAAPI_I965_DRIVER_PATH, 1);
-    if (res == ERROR_RESULT_VALUE) {
-      WARNING_LOG() << "Failed to set enviroment variable LIBVA_DRIVERS_PATH "
-                       "to " VAAPI_I965_DRIVER_PATH;
-    }
-  }
-  if (common::logging::CURRENT_LOG_LEVEL() == common::logging::LOG_LEVEL_DEBUG) {
-    int res = setenv("GST_DEBUG", "3", 1);
-    if (res == SUCCESS_RESULT_VALUE) {
-      gst_debug_add_log_function(RedirectGstLog, nullptr, nullptr);
-    }
-  }
-
-  gst_init(&argc, &argv);
-  const char* va_dr_name = getenv("LIBVA_DRIVER_NAME");
-  if (!va_dr_name) {
-    va_dr_name = "(null)";
-  }
-  const char* va_dr_path = getenv("LIBVA_DRIVERS_PATH");
-  if (!va_dr_path) {
-    va_dr_path = "(null)";
-  }
-  DEBUG_LOG() << "Stream backend inited, LIBVA_DRIVER_NAME=" << va_dr_name << ", LIBVA_DRIVERS_PATH=" << va_dr_path;
-}
-
-void streams_deinit() {
-  gst_deinit();
-}
 
 IBaseStream::IStreamClient::~IStreamClient() {}
 
