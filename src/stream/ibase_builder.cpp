@@ -99,7 +99,9 @@ elements::Element* IBaseBuilder::BuildGenericOutput(const OutputUri& output, ele
   pad::Pad* sink_pad = sink->StaticPad("sink");
   if (sink_pad->IsValid()) {
     common::uri::Url uri = output.GetOutput();
-    HandleOutputSinkPadCreated(sink_pad, sink_id, uri, output.GetHlsType() == OutputUri::HLS_PUSH);
+    const auto hlst = output.GetHlsType();
+    bool need_push = hlst && *hlst == OutputUri::HLS_PUSH;
+    HandleOutputSinkPadCreated(sink_pad, sink_id, uri, need_push);
   }
   delete sink_pad;
   return sink;

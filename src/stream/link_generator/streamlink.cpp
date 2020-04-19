@@ -60,7 +60,12 @@ bool StreamLinkGenerator::Generate(const InputUri& src, InputUri* out) const {
     return false;
   }
 
-  if (!src.GetStreamLink()) {
+  const auto str = src.GetStreamLink();
+  if (!str) {
+    return false;
+  }
+
+  if (!*str) {
     return false;
   }
 

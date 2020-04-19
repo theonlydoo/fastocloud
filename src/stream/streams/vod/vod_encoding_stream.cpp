@@ -35,8 +35,10 @@ void VodEncodeStream::PostExecCleanup() {
       common::uri::Url::scheme scheme = uri.GetScheme();
 
       if (scheme == common::uri::Url::http) {
-        const common::file_system::ascii_directory_string_path http_path = output.GetHttpRoot();
-        RemoveFilesByExtension(http_path, CHUNK_EXT);
+        const auto http_path = output.GetHttpRoot();
+        if (http_path) {
+          RemoveFilesByExtension(*http_path, CHUNK_EXT);
+        }
       }
     }
   }

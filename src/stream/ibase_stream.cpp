@@ -122,8 +122,10 @@ void IBaseStream::PreExecCleanup(time_t old_life_time) {
     common::uri::Url::scheme scheme = uri.GetScheme();
 
     if (scheme == common::uri::Url::http) {
-      const common::file_system::ascii_directory_string_path http_path = output.GetHttpRoot();
-      RemoveOldFilesByTime(http_path, max_life_time / 1000, "*" CHUNK_EXT);
+      const auto http_path = output.GetHttpRoot();
+      if (http_path) {
+        RemoveOldFilesByTime(*http_path, max_life_time / 1000, "*" CHUNK_EXT);
+      }
     }
   }
 }
@@ -440,7 +442,8 @@ GstBusSyncReply IBaseStream::HandleSyncBusMessageReceived(GstBus* bus, GstMessag
         common::uri::Url uri = output.GetOutput();
         common::uri::Url::scheme scheme = uri.GetScheme();
         if (scheme == common::uri::Url::http || scheme == common::uri::Url::https) {
-          if (output.GetHlsType() == OutputUri::HLS_PUSH) {
+          const auto hlst = output.GetHlsType();
+          if (hlst && *hlst == OutputUri::HLS_PUSH) {
             // HLS PUSH
           }
         }

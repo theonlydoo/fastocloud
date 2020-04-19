@@ -34,8 +34,10 @@ void ChildStream::CleanUp() {
   for (auto out_uri : conf_.output) {
     common::uri::Url ouri = out_uri.GetOutput();
     if (ouri.GetScheme() == common::uri::Url::http) {
-      const common::file_system::ascii_directory_string_path http_root = out_uri.GetHttpRoot();
-      common::file_system::remove_directory(http_root.GetPath(), true);
+      const auto http_root = out_uri.GetHttpRoot();
+      if (http_root) {
+        common::file_system::remove_directory(http_root->GetPath(), true);
+      }
     }
   }
 }

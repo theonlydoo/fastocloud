@@ -45,18 +45,22 @@ Element* make_src(const InputUri& uri, element_id_t input_id, gint timeout_secs)
     return make_file_src(upath.GetPath(), input_id);
   } else if (scheme == common::uri::Url::http || scheme == common::uri::Url::https) {
     common::Optional<std::string> agent;
-    if (uri.GetUserAgent() == InputUri::VLC) {
-      agent = std::string(kVLC);
-    } else if (uri.GetUserAgent() == InputUri::FFMPEG) {
-      agent = std::string(kFFmpegUA);
-    } else if (uri.GetUserAgent() == InputUri::WINK) {
-      agent = std::string(kWinkUA);
-    } else if (uri.GetUserAgent() == InputUri::CHROME) {
-      agent = std::string(kChromeUA);
-    } else if (uri.GetUserAgent() == InputUri::MOZILLA) {
-      agent = std::string(kMozillaUA);
-    } else if (uri.GetUserAgent() == InputUri::SAFARI) {
-      agent = std::string(kSafariUA);
+    const auto ua = uri.GetUserAgent();
+    if (ua) {
+      InputUri::UserAgent uagent = *ua;
+      if (uagent == InputUri::VLC) {
+        agent = std::string(kVLC);
+      } else if (uagent == InputUri::FFMPEG) {
+        agent = std::string(kFFmpegUA);
+      } else if (uagent == InputUri::WINK) {
+        agent = std::string(kWinkUA);
+      } else if (uagent == InputUri::CHROME) {
+        agent = std::string(kChromeUA);
+      } else if (uagent == InputUri::MOZILLA) {
+        agent = std::string(kMozillaUA);
+      } else if (uagent == InputUri::SAFARI) {
+        agent = std::string(kSafariUA);
+      }
     }
 
     return make_http_src(url.GetUrl(), agent, uri.GetHttpProxyUrl(), timeout_secs, input_id);

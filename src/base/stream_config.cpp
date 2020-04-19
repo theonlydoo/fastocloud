@@ -103,8 +103,12 @@ common::ErrnoError MakeStreamInfo(const StreamConfig& config_args,
       for (auto out_uri : output) {
         common::uri::Url ouri = out_uri.GetOutput();
         if (ouri.GetScheme() == common::uri::Url::http) {
-          const common::file_system::ascii_directory_string_path http_root = out_uri.GetHttpRoot();
-          const std::string http_root_str = http_root.GetPath();
+          const auto http_root = out_uri.GetHttpRoot();
+          if (!http_root) {
+            return common::make_errno_error_inval();
+          }
+
+          const std::string http_root_str = http_root->GetPath();
           common::ErrnoError errn = CreateAndCheckDir(http_root_str);
           if (errn) {
             return errn;

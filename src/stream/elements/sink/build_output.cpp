@@ -57,7 +57,11 @@ Element* build_output(const OutputUri& output, element_id_t sink_id, bool is_vod
     ElementRtmpSink* rtmp_sink = elements::sink::make_rtmp_sink(sink_id, uri.GetUrl());
     return rtmp_sink;
   } else if (scheme == common::uri::Url::http) {
-    const common::file_system::ascii_directory_string_path http_root = output.GetHttpRoot();
+    const auto http_root = output.GetHttpRoot();
+    if (!http_root) {
+      NOTREACHED() << "Invalid http_root";
+      return nullptr;
+    }
     const common::uri::Upath upath = uri.GetPath();
     const std::string filename = upath.GetFileName();
     if (filename.empty()) {
@@ -65,7 +69,7 @@ Element* build_output(const OutputUri& output, element_id_t sink_id, bool is_vod
       return nullptr;
     }
     elements::sink::HlsOutput hout =
-        is_vod ? MakeVodHlsOutput(uri, http_root, filename) : MakeHlsOutput(uri, http_root, filename);
+        is_vod ? MakeVodHlsOutput(uri, *http_root, filename) : MakeHlsOutput(uri, *http_root, filename);
     ElementHLSSink* http_sink = elements::sink::make_http_sink(sink_id, hout);
     return http_sink;
   } else if (scheme == common::uri::Url::srt) {
