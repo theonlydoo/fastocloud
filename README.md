@@ -76,16 +76,16 @@ Visit our site: [fastocloud.com](https://fastocloud.com)
 [Admin panel](https://github.com/fastogt/iptv_admin)
 ==========
 ### Dashboard page:
-![](https://fastocloud.com/static/images/dashboard.png)
+![](https://fastocloud.com/fastocloud_pro/api/static/images/dashboard.png)
 
 ### Realtime video analysis:
-![](https://fastocloud.com/static/images/4_pic.png)
+![](https://fastocloud.com/fastocloud_pro/api/static/images/ml.png)
 
 GStreamer Pipelines
 ==========
-### [Encode (h264/aac)](https://fastocloud.com/static/examples/pipelines/encode.html)
-### [Relay](https://fastocloud.com/static/examples/pipelines/relay.html)
-### [Timeshift recorder](https://fastocloud.com/static/examples/pipelines/timeshift_rec.html)
+### [Encode (h264/aac)](https://fastocloud.com/fastocloud_pro/api/static/examples/pipelines/encode.html)
+### [Relay](https://fastocloud.com/fastocloud_pro/api/static/examples/pipelines/relay.html)
+### [Timeshift recorder](https://fastocloud.com/fastocloud_pro/api/static/examples/pipelines/timeshift_rec.html)
 
 Contribute
 ==========
