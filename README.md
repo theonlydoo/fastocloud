@@ -78,6 +78,11 @@ Visit our site: [fastocloud.com](https://fastocloud.com)
 ### Dashboard page:
 ![](https://fastocloud.com/fastocloud_pro/api/static/images/dashboard.png)
 
+[PRO Admin panel](https://fastocloud.com)
+==========
+### Dashboard page:
+![](https://fastocloud.com/fastocloud_pro/api/static/images/fastocloud_panel_pro.png)
+
 ### Realtime video analysis:
 ![](https://fastocloud.com/fastocloud_pro/api/static/images/ml.png)
 
