@@ -27,7 +27,6 @@
 #define PREPARE_SERVICE_INFO_FEEDBACK_DIRECTORY_FIELD "feedback_directory"
 #define PREPARE_SERVICE_INFO_TIMESHIFTS_DIRECTORY_FIELD "timeshifts_directory"
 #define PREPARE_SERVICE_INFO_HLS_DIRECTORY_FIELD "hls_directory"
-#define PREPARE_SERVICE_INFO_VODS_IN_DIRECTORY_FIELD "vods_in_directory"
 #define PREPARE_SERVICE_INFO_VODS_DIRECTORY_FIELD "vods_directory"
 #define PREPARE_SERVICE_INFO_CODS_DIRECTORY_FIELD "cods_directory"
 
@@ -72,7 +71,6 @@ PrepareInfo::PrepareInfo()
       feedback_directory_(),
       timeshifts_directory_(),
       hls_directory_(),
-      vods_in_directory_(),
       vods_directory_(),
       cods_directory_() {}
 
@@ -86,10 +84,6 @@ std::string PrepareInfo::GetTimeshiftsDirectory() const {
 
 std::string PrepareInfo::GetHlsDirectory() const {
   return hls_directory_;
-}
-
-std::string PrepareInfo::GetVodsInDirectory() const {
-  return vods_in_directory_;
 }
 
 std::string PrepareInfo::GetVodsDirectory() const {
@@ -106,8 +100,6 @@ common::Error PrepareInfo::SerializeFields(json_object* out) const {
   json_object_object_add(out, PREPARE_SERVICE_INFO_TIMESHIFTS_DIRECTORY_FIELD,
                          json_object_new_string(timeshifts_directory_.c_str()));
   json_object_object_add(out, PREPARE_SERVICE_INFO_HLS_DIRECTORY_FIELD, json_object_new_string(hls_directory_.c_str()));
-  json_object_object_add(out, PREPARE_SERVICE_INFO_VODS_IN_DIRECTORY_FIELD,
-                         json_object_new_string(vods_in_directory_.c_str()));
   json_object_object_add(out, PREPARE_SERVICE_INFO_VODS_DIRECTORY_FIELD,
                          json_object_new_string(vods_directory_.c_str()));
   json_object_object_add(out, PREPARE_SERVICE_INFO_CODS_DIRECTORY_FIELD,
@@ -136,13 +128,6 @@ common::Error PrepareInfo::DoDeSerialize(json_object* serialized) {
       json_object_object_get_ex(serialized, PREPARE_SERVICE_INFO_HLS_DIRECTORY_FIELD, &jhls_directory);
   if (jhls_directory_exists) {
     inf.hls_directory_ = json_object_get_string(jhls_directory);
-  }
-
-  json_object* jvods_in_directory = nullptr;
-  json_bool jvods_in_directory_exists =
-      json_object_object_get_ex(serialized, PREPARE_SERVICE_INFO_VODS_IN_DIRECTORY_FIELD, &jvods_in_directory);
-  if (jvods_in_directory_exists) {
-    inf.vods_in_directory_ = json_object_get_string(jvods_in_directory);
   }
 
   json_object* jvods_directory = nullptr;
@@ -183,7 +168,7 @@ DirectoryState::DirectoryState(const std::string& dir_str, const char* k)
 
 void DirectoryState::LoadContent() {
   if (is_valid) {
-    content = common::file_system::ScanFolder(dir, "*.*", false);
+    content = common::file_system::ScanFolder(dir, "*.*", true);
   }
 }
 
@@ -191,18 +176,14 @@ Directories::Directories(const PrepareInfo& sinf)
     : feedback_dir(sinf.GetFeedbackDirectory(), PREPARE_SERVICE_INFO_FEEDBACK_DIRECTORY_FIELD),
       timeshift_dir(sinf.GetTimeshiftsDirectory(), PREPARE_SERVICE_INFO_TIMESHIFTS_DIRECTORY_FIELD),
       hls_dir(sinf.GetHlsDirectory(), PREPARE_SERVICE_INFO_HLS_DIRECTORY_FIELD),
-      vods_in_dir(sinf.GetVodsInDirectory(), PREPARE_SERVICE_INFO_VODS_IN_DIRECTORY_FIELD),
       vods_dir(sinf.GetVodsDirectory(), PREPARE_SERVICE_INFO_VODS_DIRECTORY_FIELD),
-      cods_dir(sinf.GetCodsDirectory(), PREPARE_SERVICE_INFO_CODS_DIRECTORY_FIELD) {
-  vods_in_dir.LoadContent();
-}
+      cods_dir(sinf.GetCodsDirectory(), PREPARE_SERVICE_INFO_CODS_DIRECTORY_FIELD) {}
 
 std::string MakeDirectoryResponce(const Directories& dirs) {
   json_object* obj = json_object_new_array();
   json_object_array_add(obj, MakeDirectoryStateResponce(dirs.feedback_dir));
   json_object_array_add(obj, MakeDirectoryStateResponce(dirs.timeshift_dir));
   json_object_array_add(obj, MakeDirectoryStateResponce(dirs.hls_dir));
-  json_object_array_add(obj, MakeDirectoryStateResponce(dirs.vods_in_dir));
   json_object_array_add(obj, MakeDirectoryStateResponce(dirs.vods_dir));
   json_object_array_add(obj, MakeDirectoryStateResponce(dirs.cods_dir));
   std::string obj_str = json_object_get_string(obj);
