@@ -70,7 +70,14 @@ bool TimeShiftInfo::FindChunkToPlay(time_t chunk_duration, chunk_index_t* index)
     CRITICAL_LOG() << "Folder with chunks doesn't exist: " << absolute_path;
   }
 
-  auto files = common::file_system::ScanFolder(timshift_dir, CHUNK_EXT, false, &filter_files);
+  const std::function<bool(const common::file_system::ascii_file_string_path&)> filter =
+      [](const common::file_system::ascii_file_string_path& path) {
+        std::string file_name = path.GetBaseFileName();
+        chunk_index_t index;
+        return common::ConvertFromString(file_name, &index);
+      };
+
+  auto files = common::file_system::ScanFolder(timshift_dir, CHUNK_EXT, false, filter);
   if (files.empty()) {
     return false;
   }
@@ -112,7 +119,14 @@ bool TimeShiftInfo::FindLastChunk(chunk_index_t* index, time_t* file_created_tim
     CRITICAL_LOG() << "Folder with chunks doesn't exist: " << absolute_path;
   }
 
-  auto files = common::file_system::ScanFolder(timshift_dir, CHUNK_EXT, false, &filter_files);
+  const std::function<bool(const common::file_system::ascii_file_string_path&)> filter =
+      [](const common::file_system::ascii_file_string_path& path) {
+        std::string file_name = path.GetBaseFileName();
+        chunk_index_t index;
+        return common::ConvertFromString(file_name, &index);
+      };
+
+  auto files = common::file_system::ScanFolder(timshift_dir, CHUNK_EXT, false, filter);
   if (files.empty()) {
     return false;
   }
