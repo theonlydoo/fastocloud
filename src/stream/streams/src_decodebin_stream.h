@@ -35,10 +35,10 @@ class SrcDecodeBinStream : public IBaseStream {
   const char* ClassName() const override;
 
  protected:
-  void OnInpudSrcPadCreated(pad::Pad* src_pad, element_id_t id, const common::uri::Url& url) override;
+  void OnInpudSrcPadCreated(pad::Pad* src_pad, element_id_t id, const common::uri::GURL& url) override;
   void OnOutputSinkPadCreated(pad::Pad* sink_pad,
                               element_id_t id,
-                              const common::uri::Url& url,
+                              const common::uri::GURL& url,
                               bool need_push) override;
   virtual void OnDecodebinCreated(elements::ElementDecodebin* decodebin);
 

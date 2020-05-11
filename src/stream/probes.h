@@ -40,10 +40,10 @@ struct Consistency {
 
 class Probe {
  public:
-  Probe(element_id_t id, const common::uri::Url& url, IBaseStream* stream);
+  Probe(element_id_t id, const common::uri::GURL& url, IBaseStream* stream);
   virtual ~Probe();
 
-  const common::uri::Url& GetUrl() const;
+  const common::uri::GURL& GetUrl() const;
 
   virtual void Link(GstPad* pad) = 0;
   element_id_t GetID() const;
@@ -66,7 +66,7 @@ class Probe {
   gulong id_buffer_;
   GstPad* pad_;
   Consistency consistency_;
-  const common::uri::Url url_;
+  const common::uri::GURL url_;
 
  private:
   DISALLOW_COPY_AND_ASSIGN(Probe);
@@ -75,7 +75,7 @@ class Probe {
 class InputProbe : public Probe {
  public:
   typedef Probe base_class;
-  InputProbe(element_id_t id, const common::uri::Url& url, IBaseStream* stream);
+  InputProbe(element_id_t id, const common::uri::GURL& url, IBaseStream* stream);
 
   void Link(GstPad* pad) override;
 
@@ -86,7 +86,7 @@ class InputProbe : public Probe {
 class OutputProbe : public Probe {
  public:
   typedef Probe base_class;
-  OutputProbe(element_id_t id, const common::uri::Url& url, bool need_push, IBaseStream* stream);
+  OutputProbe(element_id_t id, const common::uri::GURL& url, bool need_push, IBaseStream* stream);
 
   bool GetNeedPush() const;
 

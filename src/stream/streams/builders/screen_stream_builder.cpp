@@ -39,7 +39,7 @@ Connector ScreenStreamBuilder::BuildInput() {
     ElementAdd(video);
     pad::Pad* src_pad = video->StaticPad("src");
     if (src_pad->IsValid()) {
-      HandleInputSrcPadCreated(src_pad, 0, common::uri::Url());
+      HandleInputSrcPadCreated(src_pad, 0, common::uri::GURL());
     }
     delete src_pad;
   }
@@ -50,7 +50,7 @@ Connector ScreenStreamBuilder::BuildInput() {
     ElementAdd(audio);
     pad::Pad* src_pad = audio->StaticPad("src");
     if (src_pad->IsValid()) {
-      HandleInputSrcPadCreated(src_pad, 0, common::uri::Url());
+      HandleInputSrcPadCreated(src_pad, 0, common::uri::GURL());
     }
     delete src_pad;
   }
@@ -78,7 +78,7 @@ Connector ScreenStreamBuilder::BuildOutput(Connector conn) {
       ElementAdd(video);
       pad::Pad* sink_pad = video->StaticPad("sink");
       if (sink_pad->IsValid()) {
-        HandleOutputSinkPadCreated(sink_pad, i, common::uri::Url(), false);
+        HandleOutputSinkPadCreated(sink_pad, i, common::uri::GURL(), false);
       }
       delete sink_pad;
       if (conn.video) {
@@ -91,7 +91,7 @@ Connector ScreenStreamBuilder::BuildOutput(Connector conn) {
       ElementAdd(audio);
       pad::Pad* sink_pad = audio->StaticPad("sink");
       if (sink_pad->IsValid()) {
-        HandleOutputSinkPadCreated(sink_pad, i, common::uri::Url(), false);
+        HandleOutputSinkPadCreated(sink_pad, i, common::uri::GURL(), false);
       }
       delete sink_pad;
       if (conn.audio) {

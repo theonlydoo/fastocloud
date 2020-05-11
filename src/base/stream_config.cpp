@@ -16,8 +16,6 @@
 
 #include <string>
 
-#include <common/uri/url.h>
-
 #include "base/config_fields.h"
 #include "base/inputs_outputs.h"
 #include "base/utils.h"
@@ -101,8 +99,8 @@ common::ErrnoError MakeStreamInfo(const StreamConfig& config_args,
       }
 
       for (auto out_uri : output) {
-        common::uri::Url ouri = out_uri.GetOutput();
-        if (ouri.GetScheme() == common::uri::Url::http) {
+        auto ouri = out_uri.GetOutput();
+        if (ouri.SchemeIsHTTPOrHTTPS()) {
           const auto http_root = out_uri.GetHttpRoot();
           if (!http_root) {
             return common::make_errno_error_inval();

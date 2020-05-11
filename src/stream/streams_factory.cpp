@@ -54,8 +54,8 @@ IBaseStream* StreamsFactory::CreateStream(const Config* config,
     if (input.size() > 1) {
       bool is_playlist = true;
       for (InputUri iuri : input) {
-        common::uri::Url input_uri = iuri.GetInput();
-        is_playlist &= input_uri.GetScheme() == common::uri::Url::file;
+        common::uri::GURL input_uri = iuri.GetInput();
+        is_playlist &= input_uri.SchemeIsFile();
       }
       if (is_playlist) {  // playlist
         const streams::PlaylistRelayConfig* prconfig = static_cast<const streams::PlaylistRelayConfig*>(config);
@@ -68,7 +68,7 @@ IBaseStream* StreamsFactory::CreateStream(const Config* config,
     }
 
     InputUri iuri = input[0];
-    if (iuri.GetInput().GetScheme() == common::uri::Url::rtsp) {
+    if (iuri.GetInput().SchemeIs("rtsp")) {
       return new streams::RtspRelayStream(rconfig, client, stats);
     }
 
@@ -78,8 +78,8 @@ IBaseStream* StreamsFactory::CreateStream(const Config* config,
     if (input.size() > 1) {
       bool is_playlist = true;
       for (InputUri iuri : input) {
-        common::uri::Url input_uri = iuri.GetInput();
-        is_playlist &= input_uri.GetScheme() == common::uri::Url::file;
+        common::uri::GURL input_uri = iuri.GetInput();
+        is_playlist &= input_uri.SchemeIsFile();
       }
       if (is_playlist) {  // playlist
         return new streams::PlaylistEncodingStream(econfig, client, stats);
@@ -95,9 +95,9 @@ IBaseStream* StreamsFactory::CreateStream(const Config* config,
       return new streams::DisplayInputStream(econfig, client, stats);
     }
 
-    if (iuri.GetInput().GetScheme() == common::uri::Url::dev) {
+    if (iuri.GetInput().SchemeIsDev()) {
       return new streams::encoding::DeviceStream(econfig, client, stats);
-    } else if (iuri.GetInput().GetScheme() == common::uri::Url::rtsp) {
+    } else if (iuri.GetInput().SchemeIs("rtsp")) {
       return new streams::RtspEncodingStream(econfig, client, stats);
     }
 

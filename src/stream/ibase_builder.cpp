@@ -98,7 +98,7 @@ elements::Element* IBaseBuilder::BuildGenericOutput(const OutputUri& output, ele
   elements::Element* sink = CreateSink(output, sink_id);
   pad::Pad* sink_pad = sink->StaticPad("sink");
   if (sink_pad->IsValid()) {
-    common::uri::Url uri = output.GetOutput();
+    auto uri = output.GetOutput();
     const auto hlst = output.GetHlsType();
     bool need_push = hlst && *hlst == OutputUri::HLS_PUSH;
     HandleOutputSinkPadCreated(sink_pad, sink_id, uri, need_push);
@@ -113,7 +113,7 @@ elements::Element* IBaseBuilder::CreateSink(const OutputUri& output, element_id_
   return sink;
 }
 
-void IBaseBuilder::HandleInputSrcPadCreated(pad::Pad* pad, element_id_t id, const common::uri::Url& url) {
+void IBaseBuilder::HandleInputSrcPadCreated(pad::Pad* pad, element_id_t id, const common::uri::GURL& url) {
   if (observer_) {
     observer_->OnInpudSrcPadCreated(pad, id, url);
   }
@@ -121,7 +121,7 @@ void IBaseBuilder::HandleInputSrcPadCreated(pad::Pad* pad, element_id_t id, cons
 
 void IBaseBuilder::HandleOutputSinkPadCreated(pad::Pad* pad,
                                               element_id_t id,
-                                              const common::uri::Url& url,
+                                              const common::uri::GURL& url,
                                               bool need_push) {
   if (observer_) {
     observer_->OnOutputSinkPadCreated(pad, id, url, need_push);

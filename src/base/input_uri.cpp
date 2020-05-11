@@ -19,11 +19,11 @@
 namespace fastocloud {
 
 bool IsTestInputUrl(const InputUri& url) {
-  return url.GetInput() == common::uri::Url(TEST_URL);
+  return url.GetInput() == common::uri::GURL(TEST_URL);
 }
 
 bool IsDisplayInputUrl(const InputUri& url) {
-  return url.GetInput() == common::uri::Url(DISPLAY_URL);
+  return url.GetInput() == common::uri::GURL(DISPLAY_URL);
 }
 
 }  // namespace fastocloud

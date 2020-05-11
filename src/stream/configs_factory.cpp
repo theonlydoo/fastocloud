@@ -442,7 +442,7 @@ Config* make_config_copy(const Config* conf, const link_generator::ILinkGenerato
       InputUri url;
       if (generator->Generate(input[i], &url)) {
         input[i] = url;
-        DEBUG_LOG() << "Generated url: " << url.GetInput().GetUrl();
+        DEBUG_LOG() << "Generated url: " << url.GetInput().spec();
       }
     }
     copy->SetInput(input);

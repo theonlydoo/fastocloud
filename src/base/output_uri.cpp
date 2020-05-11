@@ -19,7 +19,7 @@
 namespace fastocloud {
 
 bool IsTestOutputUrl(const OutputUri& url) {
-  return url.GetOutput() == common::uri::Url(TEST_URL);
+  return url.GetOutput() == common::uri::GURL(TEST_URL);
 }
 
 }  // namespace fastocloud

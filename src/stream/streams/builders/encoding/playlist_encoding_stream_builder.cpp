@@ -35,7 +35,7 @@ elements::Element* PlaylistEncodingStreamBuilder::BuildInputSrc() {
   // g_signal_connect(appsrc, "enough-data", G_CALLBACK(enough_data), this);
   pad::Pad* src_pad = appsrc->StaticPad("src");
   if (src_pad->IsValid()) {
-    HandleInputSrcPadCreated(src_pad, 0, common::uri::Url());
+    HandleInputSrcPadCreated(src_pad, 0, common::uri::GURL());
   }
   delete src_pad;
   ElementAdd(appsrc);

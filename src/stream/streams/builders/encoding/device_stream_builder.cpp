@@ -17,6 +17,7 @@
 #include <string>
 
 #include <common/sprintf.h>
+#include <common/uri/url_parse.h>
 
 #include "base/input_uri.h"  // for InputUri
 
@@ -39,11 +40,10 @@ Connector DeviceStreamBuilder::BuildInput() {
   const EncodeConfig* config = static_cast<const EncodeConfig*>(GetConfig());
   input_t input = config->GetInput();
   InputUri diuri = input[0];
-  common::uri::Url duri = diuri.GetInput();
-  common::uri::Upath dpath = duri.GetPath();
+  common::uri::GURL duri = diuri.GetInput();
   elements::Element* video = nullptr;
   if (config->HaveVideo()) {
-    elements::sources::ElementV4L2Src* v4l = elements::sources::make_v4l2_src(dpath.GetPath(), 0);
+    elements::sources::ElementV4L2Src* v4l = elements::sources::make_v4l2_src(duri.path(), 0);
     v4l->SetProperty("do-timestamp", true);
     video = v4l;
     ElementAdd(video);
@@ -74,13 +74,18 @@ Connector DeviceStreamBuilder::BuildInput() {
 
   elements::Element* audio = nullptr;
   if (config->HaveAudio()) {
-    const auto params = dpath.GetQueryParams();
+    const auto query_str = duri.query();
     std::string audio_device;
-    for (auto param : params) {
-      if (common::EqualsASCII(param.key, "audio", false)) {
-        audio_device = param.value;
+    common::uri::Component key, value;
+    common::uri::Component query(0, query_str.length());
+    while (common::uri::ExtractQueryKeyValue(query_str.c_str(), &query, &key, &value)) {
+      std::string key_string(query_str.substr(key.begin, key.len));
+      std::string param_text(query_str.substr(value.begin, value.len));
+      if (common::EqualsASCII(key_string, "audio", false)) {
+        audio_device = param_text;
       }
     }
+
     if (audio_device.empty()) {
       NOTREACHED() << "Invalid audio input.";
     }

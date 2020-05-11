@@ -19,7 +19,7 @@
 
 #include <common/media/types.h>
 #include <common/optional.h>
-#include <common/uri/url.h>
+#include <common/uri/gurl.h>
 
 #include "base/types.h"
 
@@ -163,12 +163,12 @@ std::string GenHttpTsTemplate(fastotv::timestamp_t msec);
 std::string GenVodHttpTsTemplate();
 bool GetIndexFromHttpTsTemplate(const std::string& file_name, uint64_t* index);
 
-bool IsScreenUrl(const common::uri::Url& url);
-bool IsDecklinkUrl(const common::uri::Url& url);
-bool IsDeviceOutUrl(const common::uri::Url& url, SinkDeviceType* type);
+bool IsScreenUrl(const common::uri::GURL& url);
+bool IsDecklinkUrl(const common::uri::GURL& url);
+bool IsDeviceOutUrl(const common::uri::GURL& url, SinkDeviceType* type);
 
-bool IsRecordingUrl(const common::uri::Url& url);
-bool IsFakeUrl(const common::uri::Url& url);
+bool IsRecordingUrl(const common::uri::GURL& url);
+bool IsFakeUrl(const common::uri::GURL& url);
 
 }  // namespace stream
 }  // namespace fastocloud

@@ -38,7 +38,7 @@ Connector TestLifeStreamBuilder::BuildTestOutput(Connector conn) {
     ElementAdd(video);
     pad::Pad* sink_pad = video->StaticPad("sink");
     if (sink_pad->IsValid()) {
-      HandleOutputSinkPadCreated(sink_pad, 0, common::uri::Url(), false);
+      HandleOutputSinkPadCreated(sink_pad, 0, common::uri::GURL(), false);
     }
     delete sink_pad;
     if (conn.video) {
@@ -51,7 +51,7 @@ Connector TestLifeStreamBuilder::BuildTestOutput(Connector conn) {
     ElementAdd(audio);
     pad::Pad* sink_pad = audio->StaticPad("sink");
     if (sink_pad->IsValid()) {
-      HandleOutputSinkPadCreated(sink_pad, 0, common::uri::Url(), false);
+      HandleOutputSinkPadCreated(sink_pad, 0, common::uri::GURL(), false);
     }
     delete sink_pad;
     if (conn.audio) {

@@ -88,7 +88,7 @@ elements::Element* SrcDecodeStreamBuilder::BuildInputSrc() {
   const Config* config = GetConfig();
   input_t prepared = config->GetInput();
   InputUri uri = prepared[0];
-  const common::uri::Url url = uri.GetInput();
+  const common::uri::GURL url = uri.GetInput();
   elements::Element* src = elements::sources::make_src(uri, 0, IBaseStream::src_timeout_sec);
   pad::Pad* src_pad = src->StaticPad("src");
   if (src_pad->IsValid()) {
@@ -139,10 +139,9 @@ Connector SrcDecodeStreamBuilder::BuildOutput(Connector conn) {
       continue;
     }
 
-    common::uri::Url uri = output.GetOutput();
-    common::uri::Url::scheme scheme = uri.GetScheme();
-    bool is_rtp_out = scheme == common::uri::Url::udp;
-    elements::Element* mux = elements::muxer::make_muxer(scheme, i);
+    common::uri::GURL uri = output.GetOutput();
+    bool is_rtp_out = uri.SchemeIs("udp");
+    elements::Element* mux = elements::muxer::make_muxer(uri, i);
     ElementAdd(mux);
 
     if (config->HaveVideo()) {

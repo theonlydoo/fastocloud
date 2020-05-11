@@ -106,8 +106,8 @@ class IBaseStream : public common::IMetaClassInfo, public IBaseBuilderObserver {
 
   const Config* GetConfig() const;
 
-  void LinkInputPad(GstPad* pad, element_id_t id, const common::uri::Url& url);
-  void LinkOutputPad(GstPad* pad, element_id_t id, const common::uri::Url& url, bool need_push);
+  void LinkInputPad(GstPad* pad, element_id_t id, const common::uri::GURL& url);
+  void LinkOutputPad(GstPad* pad, element_id_t id, const common::uri::GURL& url, bool need_push);
 
   size_t CountInputEOS() const;
   size_t CountOutEOS() const;
@@ -126,10 +126,10 @@ class IBaseStream : public common::IMetaClassInfo, public IBaseBuilderObserver {
   void SetAudioInited(bool val);
   void SetVideoInited(bool val);
 
-  void OnInpudSrcPadCreated(pad::Pad* src_pad, element_id_t id, const common::uri::Url& url) override = 0;
+  void OnInpudSrcPadCreated(pad::Pad* src_pad, element_id_t id, const common::uri::GURL& url) override = 0;
   void OnOutputSinkPadCreated(pad::Pad* sink_pad,
                               element_id_t id,
-                              const common::uri::Url& url,
+                              const common::uri::GURL& url,
                               bool need_push) override = 0;
 
   virtual IBaseBuilder* CreateBuilder() = 0;

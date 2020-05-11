@@ -18,7 +18,7 @@
 
 #include <common/file_system/file_system.h>
 #include <common/file_system/path.h>
-#include <common/uri/url.h>
+#include <common/uri/gurl.h>
 
 #include "stream/elements/element.h"  // for ElementEx, SupportedElements::ELEMENT_...
 #include "stream/elements/sink/sink.h"
@@ -37,10 +37,10 @@ struct HlsOutput {
   uint32_t max_files;
 };
 
-HlsOutput MakeHlsOutput(const common::uri::Url& uri,
+HlsOutput MakeHlsOutput(const common::uri::GURL& uri,
                         const common::file_system::ascii_directory_string_path& http_root,
                         const std::string& filename);
-HlsOutput MakeVodHlsOutput(const common::uri::Url& uri,
+HlsOutput MakeVodHlsOutput(const common::uri::GURL& uri,
                            const common::file_system::ascii_directory_string_path& http_root,
                            const std::string& filename);
 

@@ -100,9 +100,8 @@ void SrcDecodeBinStream::decodebin_element_added_callback(GstBin* bin, GstElemen
     const auto config = stream->GetConfig();
     input_t input = config->GetInput();
     for (size_t i = 0; i < input.size(); ++i) {
-      common::uri::Url input_url = input[i].GetInput();
-      common::uri::Url::scheme sh = input_url.GetScheme();
-      if (sh == common::uri::Url::udp) {
+      common::uri::GURL input_url = input[i].GetInput();
+      if (input_url.SchemeIs("udp")) {
         const auto pid = input[i].GetProgramNumber();
         if (pid) {
           elements::ElementTsDemux* tsdemux = new elements::ElementTsDemux("demux", element);
@@ -121,13 +120,13 @@ void SrcDecodeBinStream::decodebin_element_removed_callback(GstBin* bin, GstElem
   return stream->HandleDecodeBinElementRemoved(bin, element);
 }
 
-void SrcDecodeBinStream::OnInpudSrcPadCreated(pad::Pad* src_pad, element_id_t id, const common::uri::Url& url) {
+void SrcDecodeBinStream::OnInpudSrcPadCreated(pad::Pad* src_pad, element_id_t id, const common::uri::GURL& url) {
   LinkInputPad(src_pad->GetGstPad(), id, url);
 }
 
 void SrcDecodeBinStream::OnOutputSinkPadCreated(pad::Pad* sink_pad,
                                                 element_id_t id,
-                                                const common::uri::Url& url,
+                                                const common::uri::GURL& url,
                                                 bool need_push) {
   LinkOutputPad(sink_pad->GetGstPad(), id, url, need_push);
 }

@@ -33,8 +33,8 @@ void ElementSoupHTTPSrc::SetUserAgent(const std::string& agent) {
   SetProperty("user-agent", agent);
 }
 
-void ElementSoupHTTPSrc::SetProxy(const common::uri::Url& url) {
-  SetProperty("proxy", url.GetUrl());
+void ElementSoupHTTPSrc::SetProxy(const common::uri::GURL& url) {
+  SetProperty("proxy", url.spec());
 }
 
 void ElementSoupHTTPSrc::SetProxyID(const std::string& id) {

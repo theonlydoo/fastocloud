@@ -30,20 +30,20 @@
 
 namespace fastocloud {
 
-Logo::Logo() : Logo(common::uri::Url(), common::draw::Point(), alpha_t()) {}
+Logo::Logo() : Logo(url_t(), common::draw::Point(), alpha_t()) {}
 
-Logo::Logo(const common::uri::Url& path, const common::draw::Point& position, alpha_t alpha)
+Logo::Logo(const url_t& path, const common::draw::Point& position, alpha_t alpha)
     : path_(path), position_(position), size_(), alpha_(alpha) {}
 
 bool Logo::Equals(const Logo& inf) const {
   return path_ == inf.path_;
 }
 
-common::uri::Url Logo::GetPath() const {
+Logo::url_t Logo::GetPath() const {
   return path_;
 }
 
-void Logo::SetPath(const common::uri::Url& path) {
+void Logo::SetPath(const url_t& path) {
   path_ = path;
 }
 
@@ -80,7 +80,7 @@ common::Optional<Logo> Logo::MakeLogo(common::HashValue* hash) {
   common::Value* logo_path_field = hash->Find(LOGO_PATH_FIELD);
   std::string logo_path;
   if (logo_path_field && logo_path_field->GetAsBasicString(&logo_path)) {
-    res.SetPath(common::uri::Url(logo_path));
+    res.SetPath(url_t(logo_path));
   }
 
   common::Value* logo_pos_field = hash->Find(LOGO_POSITION_FIELD);
@@ -114,7 +114,7 @@ common::Error Logo::DoDeSerialize(json_object* serialized) {
   json_object* jpath = nullptr;
   json_bool jpath_exists = json_object_object_get_ex(serialized, LOGO_PATH_FIELD, &jpath);
   if (jpath_exists) {
-    res.SetPath(common::uri::Url(json_object_get_string(jpath)));
+    res.SetPath(url_t(json_object_get_string(jpath)));
   }
 
   json_object* jposition = nullptr;
@@ -146,7 +146,7 @@ common::Error Logo::DoDeSerialize(json_object* serialized) {
 }
 
 common::Error Logo::SerializeFields(json_object* out) const {
-  const std::string logo_path = path_.GetUrl();
+  const std::string logo_path = path_.spec();
   json_object_object_add(out, LOGO_PATH_FIELD, json_object_new_string(logo_path.c_str()));
   const std::string position_str = common::ConvertToString(GetPosition());
   json_object_object_add(out, LOGO_POSITION_FIELD, json_object_new_string(position_str.c_str()));

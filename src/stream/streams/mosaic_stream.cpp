@@ -289,13 +289,13 @@ const char* MosaicStream::ClassName() const {
   return "MosaicStream";
 }
 
-void MosaicStream::OnInpudSrcPadCreated(pad::Pad* src_pad, element_id_t id, const common::uri::Url& url) {
+void MosaicStream::OnInpudSrcPadCreated(pad::Pad* src_pad, element_id_t id, const common::uri::GURL& url) {
   LinkInputPad(src_pad->GetGstPad(), id, url);
 }
 
 void MosaicStream::OnOutputSinkPadCreated(pad::Pad* sink_pad,
                                           element_id_t id,
-                                          const common::uri::Url& url,
+                                          const common::uri::GURL& url,
                                           bool need_push) {
   LinkOutputPad(sink_pad->GetGstPad(), id, url, need_push);
 }

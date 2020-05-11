@@ -245,16 +245,13 @@ elements_line_t EncodingStreamBuilder::BuildVideoPostProc(element_id_t video_id)
 
   const auto logo = conf->GetLogo();
   if (logo) {
-    common::uri::Url logo_uri = logo->GetPath();
+    common::uri::GURL logo_uri = logo->GetPath();
     common::draw::Point logo_point = logo->GetPosition();
     alpha_t alpha = logo->GetAlpha();
     elements::video::ElementGDKPixBufOverlay* videologo =
         new elements::video::ElementGDKPixBufOverlay(common::MemSPrintf(VIDEO_LOGO_NAME_1U, video_id));
-    common::uri::Url::scheme scheme = logo_uri.GetScheme();
-    if (scheme == common::uri::Url::file) {
-      common::uri::Upath upath = logo_uri.GetPath();
-      std::string path = upath.GetPath();
-      videologo->SetLocation(path);
+    if (logo_uri.SchemeIsFile()) {
+      videologo->SetLocation(logo_uri.path());
     } else {
       NOTREACHED();
     }
@@ -274,15 +271,12 @@ elements_line_t EncodingStreamBuilder::BuildVideoPostProc(element_id_t video_id)
 
   const auto rsvg_logo = conf->GetRSVGLogo();
   if (rsvg_logo) {
-    common::uri::Url logo_uri = rsvg_logo->GetPath();
+    common::uri::GURL logo_uri = rsvg_logo->GetPath();
     common::draw::Point logo_point = rsvg_logo->GetPosition();
     elements::video::ElementRSVGOverlay* rvideologo =
         new elements::video::ElementRSVGOverlay(common::MemSPrintf(RSVG_VIDEO_LOGO_NAME_1U, video_id));
-    common::uri::Url::scheme scheme = logo_uri.GetScheme();
-    if (scheme == common::uri::Url::file) {
-      common::uri::Upath upath = logo_uri.GetPath();
-      std::string path = upath.GetPath();
-      rvideologo->SetLocation(path);
+    if (logo_uri.SchemeIsFile()) {
+      rvideologo->SetLocation(logo_uri.path());
     } else {
       NOTREACHED();
     }

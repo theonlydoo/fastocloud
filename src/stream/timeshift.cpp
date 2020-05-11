@@ -31,13 +31,6 @@ namespace fastocloud {
 namespace stream {
 
 namespace {
-template <typename CharT, typename Traits>
-bool filter_files(const common::file_system::FileStringPath<CharT, Traits>& path) {
-  std::string file_name = path.GetBaseFileName();
-  chunk_index_t index;
-  return common::ConvertFromString(file_name, &index);
-}
-
 bool compare_files(const common::file_system::ascii_file_string_path& first,
                    const common::file_system::ascii_file_string_path& second) {  // should be 0.ts, 1.ts, 2.ts
   std::string first_chunk = first.GetBaseFileName();

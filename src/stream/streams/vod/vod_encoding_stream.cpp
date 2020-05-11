@@ -31,10 +31,8 @@ void VodEncodeStream::PostExecCleanup() {
   const VodEncodeConfig* vconfig = static_cast<const VodEncodeConfig*>(GetConfig());
   if (vconfig->GetCleanupTS()) {
     for (const OutputUri& output : vconfig->GetOutput()) {
-      common::uri::Url uri = output.GetOutput();
-      common::uri::Url::scheme scheme = uri.GetScheme();
-
-      if (scheme == common::uri::Url::http) {
+      common::uri::GURL uri = output.GetOutput();
+      if (uri.SchemeIsHTTPOrHTTPS()) {
         const auto http_path = output.GetHttpRoot();
         if (http_path) {
           RemoveFilesByExtension(*http_path, CHUNK_EXT);

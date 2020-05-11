@@ -39,8 +39,8 @@ Connector RtspRelayStreamBuilder::BuildInput() {
   const RelayConfig* config = static_cast<const RelayConfig*>(GetConfig());
   input_t prepared = config->GetInput();
   InputUri uri = prepared[0];
-  const common::uri::Url url = uri.GetInput();
-  elements::sources::ElementRTSPSrc* src = elements::sources::make_rtsp_src(url.GetUrl(), 0);
+  const common::uri::GURL url = uri.GetInput();
+  elements::sources::ElementRTSPSrc* src = elements::sources::make_rtsp_src(url.spec(), 0);
   src->SetLatency(0);
   ElementAdd(src);
   HandleRTSPSrcCreated(src);

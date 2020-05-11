@@ -82,7 +82,7 @@ void RtspEncodingStream::HandleRtspSrcPadAdded(GstElement* src, GstPad* new_pad)
   if (element_plugin_name == elements::sources::ElementRTSPSrc::GetPluginName()) {
     elements::sources::ElementRTSPSrc* rsrc = new elements::sources::ElementRTSPSrc("src", src);
     pad::Pad* src_pad = new pad::Pad(new_pad);
-    OnInpudSrcPadCreated(src_pad, 0, common::uri::Url(rsrc->GetLocation()));
+    OnInpudSrcPadCreated(src_pad, 0, common::uri::GURL(rsrc->GetLocation()));
     delete src_pad;
     delete rsrc;
   }

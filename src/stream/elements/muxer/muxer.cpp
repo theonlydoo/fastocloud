@@ -33,20 +33,20 @@ ElementRTPMux* make_rtpmux(element_id_t muxer_id) {
   return make_muxer<ElementRTPMux>(muxer_id);
 }
 
-Element* make_muxer(common::uri::Url::scheme scheme, element_id_t muxer_id) {
-  if (scheme == common::uri::Url::rtmp) {
+Element* make_muxer(const common::uri::GURL& url, element_id_t muxer_id) {
+  if (url.SchemeIs("rtmp")) {
     return make_flvmux(true, muxer_id);
-  } else if (scheme == common::uri::Url::udp) {
+  } else if (url.SchemeIs("udp")) {
     return make_rtpmux(muxer_id);
-  } else if (scheme == common::uri::Url::tcp) {
+  } else if (url.SchemeIs("tcp")) {
     return make_mpegtsmux(muxer_id);
-  } else if (scheme == common::uri::Url::http) {
+  } else if (url.SchemeIsHTTPOrHTTPS()) {
     return make_mpegtsmux(muxer_id);
-  } else if (scheme == common::uri::Url::srt) {
+  } else if (url.SchemeIs("srt")) {
     return make_mpegtsmux(muxer_id);
   }
 
-  NOTREACHED() << "Unknown output scheme: " << scheme;
+  NOTREACHED() << "Unknown output url: " << url.spec();
   return nullptr;
 }
 

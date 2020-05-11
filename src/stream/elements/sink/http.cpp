@@ -23,7 +23,7 @@ namespace stream {
 namespace elements {
 namespace sink {
 
-HlsOutput MakeHlsOutput(const common::uri::Url& uri,
+HlsOutput MakeHlsOutput(const common::uri::GURL& uri,
                         const common::file_system::ascii_directory_string_path& http_root,
                         const std::string& filename) {
   elements::sink::HlsOutput hout;
@@ -31,20 +31,20 @@ HlsOutput MakeHlsOutput(const common::uri::Url& uri,
   fastotv::timestamp_t t = common::time::current_utc_mstime();
   hout.location = http_root_str + GenHttpTsTemplate(t);
   hout.play_locataion = http_root_str + filename;
-  hout.playlist_root = uri.GetHpath();
+  hout.playlist_root = uri.path();
   hout.paylist_length = 5;
   hout.max_files = 10;
   return hout;
 }
 
-HlsOutput MakeVodHlsOutput(const common::uri::Url& uri,
+HlsOutput MakeVodHlsOutput(const common::uri::GURL& uri,
                            const common::file_system::ascii_directory_string_path& http_root,
                            const std::string& filename) {
   elements::sink::HlsOutput hout;
   const std::string http_root_str = http_root.GetPath();
   hout.location = http_root_str + GenVodHttpTsTemplate();
   hout.play_locataion = http_root_str + filename;
-  hout.playlist_root = uri.GetHpath();
+  hout.playlist_root = uri.path();
   hout.paylist_length = 0;
   hout.max_files = 0;
   return hout;

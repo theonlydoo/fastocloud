@@ -16,7 +16,7 @@
 
 #include <string>
 
-#include <common/uri/url.h>
+#include <common/uri/gurl.h>
 
 #include "server/daemon/commands_info/stream/stream_info.h"
 
@@ -27,7 +27,7 @@ namespace stream {
 class GetLogInfo : public StreamInfo {
  public:
   typedef StreamInfo base_class;
-  typedef common::uri::Url url_t;
+  typedef common::uri::GURL url_t;
 
   GetLogInfo();
   explicit GetLogInfo(fastotv::stream_id_t stream_id, const std::string& feedback_dir, const url_t& log_path);
@@ -41,7 +41,7 @@ class GetLogInfo : public StreamInfo {
 
  private:
   std::string feedback_dir_;
-  common::uri::Url path_;
+  url_t path_;
 };
 
 }  // namespace stream

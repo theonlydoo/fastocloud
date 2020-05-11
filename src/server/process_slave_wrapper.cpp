@@ -971,12 +971,11 @@ common::ErrnoError ProcessSlaveWrapper::HandleRequestClientGetLogStream(Protocol
     }
 
     const auto remote_log_path = log_info.GetLogPath();
-    if (remote_log_path.GetScheme() == common::uri::Url::http) {
+    if (remote_log_path.SchemeIsHTTPOrHTTPS()) {
       const auto stream_log_file = MakeStreamLogPath(log_info.GetFeedbackDir());
       if (stream_log_file) {
         common::net::PostHttpFile(*stream_log_file, remote_log_path);
       }
-    } else if (remote_log_path.GetScheme() == common::uri::Url::https) {
     }
     return dclient->GetLogStreamSuccess(req->id);
   }
@@ -1007,12 +1006,11 @@ common::ErrnoError ProcessSlaveWrapper::HandleRequestClientGetPipelineStream(Pro
     }
 
     const auto remote_log_path = pipeline_info.GetLogPath();
-    if (remote_log_path.GetScheme() == common::uri::Url::http) {
+    if (remote_log_path.SchemeIsHTTPOrHTTPS()) {
       const auto stream_log_file = MakeStreamPipelinePath(pipeline_info.GetFeedbackDir());
       if (stream_log_file) {
         common::net::PostHttpFile(*stream_log_file, remote_log_path);
       }
-    } else if (remote_log_path.GetScheme() == common::uri::Url::https) {
     }
     return dclient->GetLogStreamSuccess(req->id);
   }
@@ -1121,8 +1119,8 @@ void ProcessSlaveWrapper::AddStreamLine(const serialized_stream_t& config_args) 
     output_t output;
     if (read_output(config_args, &output)) {
       for (const OutputUri& out_uri : output) {
-        common::uri::Url ouri = out_uri.GetOutput();
-        if (ouri.GetScheme() == common::uri::Url::http) {
+        common::uri::GURL ouri = out_uri.GetOutput();
+        if (ouri.SchemeIsHTTPOrHTTPS()) {
           const auto http_root = out_uri.GetHttpRoot();
           if (http_root) {
             config_args->Insert(CLEANUP_TS_FIELD, common::Value::CreateBooleanValue(false));
@@ -1135,8 +1133,8 @@ void ProcessSlaveWrapper::AddStreamLine(const serialized_stream_t& config_args) 
     output_t output;
     if (read_output(config_args, &output)) {
       for (const OutputUri& out_uri : output) {
-        common::uri::Url ouri = out_uri.GetOutput();
-        if (ouri.GetScheme() == common::uri::Url::http) {
+        common::uri::GURL ouri = out_uri.GetOutput();
+        if (ouri.SchemeIsHTTPOrHTTPS()) {
           const auto http_root = out_uri.GetHttpRoot();
           if (http_root) {
             cods_links_.Insert(*http_root, config_args);
@@ -1238,9 +1236,8 @@ common::ErrnoError ProcessSlaveWrapper::HandleRequestClientGetLogService(Protoco
     }
 
     const auto remote_log_path = get_log_info.GetLogPath();
-    if (remote_log_path.GetScheme() == common::uri::Url::http) {
+    if (remote_log_path.SchemeIsHTTPOrHTTPS()) {
       common::net::PostHttpFile(common::file_system::ascii_file_string_path(config_.log_path), remote_log_path);
-    } else if (remote_log_path.GetScheme() == common::uri::Url::https) {
     }
 
     return dclient->GetLogServiceSuccess(req->id);

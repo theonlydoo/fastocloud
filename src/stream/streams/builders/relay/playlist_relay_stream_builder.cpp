@@ -41,7 +41,7 @@ elements::Element* PlaylistRelayStreamBuilder::BuildInputSrc() {
 
   pad::Pad* src_pad = appsrc->StaticPad("src");
   if (src_pad->IsValid()) {
-    HandleInputSrcPadCreated(src_pad, 0, common::uri::Url());
+    HandleInputSrcPadCreated(src_pad, 0, common::uri::GURL());
   }
   delete src_pad;
   ElementAdd(appsrc);

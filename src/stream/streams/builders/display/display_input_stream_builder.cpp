@@ -35,7 +35,7 @@ Connector DisplayInputStreamBuilder::BuildInput() {
     ElementAdd(video);
     pad::Pad* src_pad = video->StaticPad("src");
     if (src_pad->IsValid()) {
-      HandleInputSrcPadCreated(src_pad, 0, common::uri::Url());
+      HandleInputSrcPadCreated(src_pad, 0, common::uri::GURL());
     }
     delete src_pad;
   }
@@ -46,7 +46,7 @@ Connector DisplayInputStreamBuilder::BuildInput() {
     ElementAdd(audio);
     pad::Pad* src_pad = audio->StaticPad("src");
     if (src_pad->IsValid()) {
-      HandleInputSrcPadCreated(src_pad, 0, common::uri::Url());
+      HandleInputSrcPadCreated(src_pad, 0, common::uri::GURL());
     }
     delete src_pad;
   }

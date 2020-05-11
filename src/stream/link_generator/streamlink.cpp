@@ -19,12 +19,12 @@
 #include <common/sprintf.h>
 
 namespace {
-bool GetTrueUrl(const std::string& path, const common::uri::Url& url, common::uri::Url* generated_url) {
+bool GetTrueUrl(const std::string& path, const common::uri::GURL& url, common::uri::GURL* generated_url) {
   if (!generated_url) {
     return false;
   }
 
-  const std::string cmd_line = common::MemSPrintf("%s %s best --stream-url", path, url.GetUrl());
+  const std::string cmd_line = common::MemSPrintf("%s %s best --stream-url", path, url.spec());
   FILE* fp = popen(cmd_line.c_str(), "r");
   if (!fp) {
     return false;
@@ -43,7 +43,7 @@ bool GetTrueUrl(const std::string& path, const common::uri::Url& url, common::ur
     true_url[ln] = 0;
   }
 
-  *generated_url = common::uri::Url(true_url);
+  *generated_url = common::uri::GURL(true_url);
   return true;
 }
 }  // namespace
@@ -73,7 +73,7 @@ bool StreamLinkGenerator::Generate(const InputUri& src, InputUri* out) const {
     return false;
   }
 
-  common::uri::Url gen;
+  common::uri::GURL gen;
   if (!GetTrueUrl(script_path_.GetPath(), src.GetInput(), &gen)) {
     return false;
   }

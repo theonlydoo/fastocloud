@@ -14,7 +14,7 @@
 
 #pragma once
 
-#include <common/uri/url.h>
+#include <common/uri/gurl.h>
 
 #include "stream/stypes.h"
 
@@ -27,11 +27,9 @@ class Pad;
 
 class IBaseBuilderObserver {
  public:
-  virtual void OnInpudSrcPadCreated(pad::Pad* src_pad, element_id_t id, const common::uri::Url& url) = 0;
-  virtual void OnOutputSinkPadCreated(pad::Pad* sink_pad,
-                                      element_id_t id,
-                                      const common::uri::Url& url,
-                                      bool need_push) = 0;
+  typedef common::uri::GURL url_t;
+  virtual void OnInpudSrcPadCreated(pad::Pad* src_pad, element_id_t id, const url_t& url) = 0;
+  virtual void OnOutputSinkPadCreated(pad::Pad* sink_pad, element_id_t id, const url_t& url, bool need_push) = 0;
 
   virtual ~IBaseBuilderObserver();
 };

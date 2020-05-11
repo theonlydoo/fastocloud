@@ -35,7 +35,7 @@ class ElementSoupHTTPSrc : public ElementLocation<ELEMENT_SOUP_HTTP_SRC> {
   void SetTimeOut(gint secs = 15);    // 0 - 3600 Default: 15
   void SetUserAgent(const std::string& agent);
 
-  void SetProxy(const common::uri::Url& url);
+  void SetProxy(const common::uri::GURL& url);
   void SetProxyID(const std::string& id);
   void SetProxyPW(const std::string& pw);
   void SetAutomaticRedirect(bool redirect);

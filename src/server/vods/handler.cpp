@@ -120,8 +120,8 @@ void VodsHandler::ProcessReceived(VodsClient* hclient, const char* request, size
   const char* extra_header = "Access-Control-Allow-Origin: *";
   if (hrequest.GetMethod() == common::http::http_method::HM_GET ||
       hrequest.GetMethod() == common::http::http_method::HM_HEAD) {
-    common::uri::Upath path = hrequest.GetPath();
-    if (!path.IsValid() || path.IsRoot()) {  // for hls
+    auto url = hrequest.GetURL();
+    if (!url.is_valid()) {  // for hls
       common::ErrnoError err =
           hclient->SendError(protocol, common::http::HS_NOT_FOUND, extra_header, "File not found.", IsKeepAlive, hinf);
       if (err) {
@@ -130,13 +130,8 @@ void VodsHandler::ProcessReceived(VodsClient* hclient, const char* request, size
       goto finish;
     }
 
-    const std::string url_dirs = path.GetHpath();
-    auto dirs_path = http_root_.MakeDirectoryStringPath(url_dirs.substr(1));
-    if (!dirs_path) {
-      dirs_path = http_root_;
-    }
-
-    auto file_path = dirs_path->MakeFileStringPath(path.GetFileName());
+    const std::string path_abs = url.PathForRequest();
+    auto file_path = http_root_.MakeConcatFileStringPath(path_abs.substr(1));
     if (!file_path) {
       common::ErrnoError err =
           hclient->SendError(protocol, common::http::HS_NOT_FOUND, extra_header, "File not found.", IsKeepAlive, hinf);
@@ -200,7 +195,7 @@ void VodsHandler::ProcessReceived(VodsClient* hclient, const char* request, size
       goto finish;
     }
 
-    const std::string mime = path.GetMime();
+    const std::string mime = common::http::get_mime_type(url.ExtractFileName());
     common::ErrnoError err = hclient->SendHeaders(protocol, common::http::HS_OK, extra_header, mime.c_str(),
                                                   &sb.st_size, &sb.st_mtime, IsKeepAlive, hinf);
     if (err) {

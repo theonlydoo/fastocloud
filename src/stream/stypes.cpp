@@ -45,15 +45,15 @@
 namespace fastocloud {
 namespace stream {
 
-bool IsScreenUrl(const common::uri::Url& url) {
-  return url == common::uri::Url(SCREEN_URL);
+bool IsScreenUrl(const common::uri::GURL& url) {
+  return url == common::uri::GURL(SCREEN_URL);
 }
 
-bool IsDecklinkUrl(const common::uri::Url& url) {
-  return url == common::uri::Url(DECKLINK_URL);
+bool IsDecklinkUrl(const common::uri::GURL& url) {
+  return url == common::uri::GURL(DECKLINK_URL);
 }
 
-bool IsDeviceOutUrl(const common::uri::Url& url, SinkDeviceType* type) {
+bool IsDeviceOutUrl(const common::uri::GURL& url, SinkDeviceType* type) {
   if (IsScreenUrl(url)) {
     if (type) {
       *type = SCREEN_OUTPUT;
@@ -69,12 +69,12 @@ bool IsDeviceOutUrl(const common::uri::Url& url, SinkDeviceType* type) {
   return false;
 }
 
-bool IsRecordingUrl(const common::uri::Url& url) {
-  return url == common::uri::Url(RECORDING_URL);
+bool IsRecordingUrl(const common::uri::GURL& url) {
+  return url == common::uri::GURL(RECORDING_URL);
 }
 
-bool IsFakeUrl(const common::uri::Url& url) {
-  return url == common::uri::Url(FAKE_URL);
+bool IsFakeUrl(const common::uri::GURL& url) {
+  return url == common::uri::GURL(FAKE_URL);
 }
 
 bool GetElementId(const std::string& name, element_id_t* elem_id) {

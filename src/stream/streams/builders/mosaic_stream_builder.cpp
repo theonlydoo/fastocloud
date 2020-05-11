@@ -109,7 +109,7 @@ bool MosaicStreamBuilder::InitPipeline() {
       ImageInfo image;
       SoundInfo sound;
       InputUri uri = prepared[i];
-      const common::uri::Url iuri = uri.GetInput();
+      const common::uri::GURL iuri = uri.GetInput();
       elements::Element* src = elements::sources::make_src(uri, i, IBaseStream::src_timeout_sec);
       pad::Pad* src_pad = src->StaticPad("src");
       if (src_pad->IsValid()) {
@@ -246,7 +246,7 @@ void MosaicStreamBuilder::BuildOutput(elements::Element* video, elements::Elemen
         ElementAdd(video_sink);
         pad::Pad* sink_pad = video_sink->StaticPad("sink");
         if (sink_pad->IsValid()) {
-          HandleOutputSinkPadCreated(sink_pad, i, common::uri::Url(), false);
+          HandleOutputSinkPadCreated(sink_pad, i, common::uri::GURL(), false);
         }
         delete sink_pad;
         ElementLink(next, video_sink);
@@ -264,7 +264,7 @@ void MosaicStreamBuilder::BuildOutput(elements::Element* video, elements::Elemen
         ElementAdd(audio);
         pad::Pad* sink_pad = audio->StaticPad("sink");
         if (sink_pad->IsValid()) {
-          HandleOutputSinkPadCreated(sink_pad, i, common::uri::Url(), false);
+          HandleOutputSinkPadCreated(sink_pad, i, common::uri::GURL(), false);
         }
         delete sink_pad;
         ElementLink(next, audio);
@@ -272,11 +272,10 @@ void MosaicStreamBuilder::BuildOutput(elements::Element* video, elements::Elemen
       continue;
     }
 
-    common::uri::Url uri = output.GetOutput();
-    common::uri::Url::scheme scheme = uri.GetScheme();
-    bool is_rtp_out = scheme == common::uri::Url::udp;
+    common::uri::GURL uri = output.GetOutput();
+    bool is_rtp_out = uri.SchemeIs("udp");
     const std::string vcodec = config->GetVideoEncoder();
-    elements::Element* mux = elements::muxer::make_muxer(scheme, i);
+    elements::Element* mux = elements::muxer::make_muxer(uri, i);
     ElementAdd(mux);
 
     if (config->HaveVideo()) {

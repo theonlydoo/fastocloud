@@ -18,7 +18,7 @@
 
 #include <common/draw/types.h>
 #include <common/serializer/json_serializer.h>
-#include <common/uri/url.h>
+#include <common/uri/gurl.h>
 #include <common/value.h>
 
 #include "base/types.h"
@@ -27,14 +27,15 @@ namespace fastocloud {
 
 class Logo : public common::serializer::JsonSerializer<Logo> {
  public:
+  typedef common::uri::GURL url_t;
   typedef common::Optional<common::draw::Size> image_size_t;
   Logo();
-  Logo(const common::uri::Url& path, const common::draw::Point& position, alpha_t alpha);
+  Logo(const url_t& path, const common::draw::Point& position, alpha_t alpha);
 
   bool Equals(const Logo& logo) const;
 
-  common::uri::Url GetPath() const;
-  void SetPath(const common::uri::Url& path);
+  url_t GetPath() const;
+  void SetPath(const url_t& path);
 
   common::draw::Point GetPosition() const;
   void SetPosition(const common::draw::Point& position);
@@ -52,7 +53,7 @@ class Logo : public common::serializer::JsonSerializer<Logo> {
   common::Error SerializeFields(json_object* out) const override;
 
  private:
-  common::uri::Url path_;
+  url_t path_;
   common::draw::Point position_;
   image_size_t size_;
   alpha_t alpha_;

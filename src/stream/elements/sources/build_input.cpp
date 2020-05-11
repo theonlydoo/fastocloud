@@ -38,12 +38,10 @@ namespace elements {
 namespace sources {
 
 Element* make_src(const InputUri& uri, element_id_t input_id, gint timeout_secs) {
-  common::uri::Url url = uri.GetInput();
-  common::uri::Url::scheme scheme = url.GetScheme();
-  if (scheme == common::uri::Url::file) {
-    const common::uri::Upath upath = url.GetPath();
-    return make_file_src(upath.GetPath(), input_id);
-  } else if (scheme == common::uri::Url::http || scheme == common::uri::Url::https) {
+  common::uri::GURL url = uri.GetInput();
+  if (url.SchemeIsFile()) {
+    return make_file_src(url.path(), input_id);
+  } else if (url.SchemeIsHTTPOrHTTPS()) {
     common::Optional<std::string> agent;
     const auto ua = uri.GetUserAgent();
     if (ua) {
@@ -63,32 +61,32 @@ Element* make_src(const InputUri& uri, element_id_t input_id, gint timeout_secs)
       }
     }
 
-    return make_http_src(url.GetUrl(), agent, uri.GetHttpProxyUrl(), timeout_secs, input_id);
-  } else if (scheme == common::uri::Url::udp) {
+    return make_http_src(url.spec(), agent, uri.GetHttpProxyUrl(), timeout_secs, input_id);
+  } else if (url.SchemeIs("udp")) {
     // udp://localhost:8080
-    std::string host_str = url.GetHost();
+    std::string host_str = url.host();
     common::net::HostAndPort host;
     if (!common::ConvertFromString(host_str, &host)) {
       NOTREACHED() << "Unknown input url: " << host_str;
       return nullptr;
     }
     return make_udp_src(host, uri.GetMulticastIface(), input_id);
-  } else if (scheme == common::uri::Url::rtmp) {
-    return make_rtmp_src(url.GetUrl(), timeout_secs, input_id);
-  } else if (scheme == common::uri::Url::tcp) {
+  } else if (url.SchemeIs("rtmp")) {
+    return make_rtmp_src(url.spec(), timeout_secs, input_id);
+  } else if (url.SchemeIs("tcp")) {
     // tcp://localhost:8080
-    std::string host_str = url.GetHost();
+    std::string host_str = url.host();
     common::net::HostAndPort host;
     if (!common::ConvertFromString(host_str, &host)) {
       NOTREACHED() << "Unknown input url: " << host_str;
       return nullptr;
     }
     return make_tcp_server_src(host, input_id);
-  } else if (scheme == common::uri::Url::srt) {
-    return make_srt_src(url.GetUrl(), input_id);
+  } else if (url.SchemeIs("srt")) {
+    return make_srt_src(url.spec(), input_id);
   }
 
-  NOTREACHED() << "Unknown input url: " << url.GetUrl();
+  NOTREACHED() << "Unknown input url: " << url.spec();
   return nullptr;
 }
 

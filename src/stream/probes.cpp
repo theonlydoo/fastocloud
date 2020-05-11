@@ -27,7 +27,7 @@ Consistency::Consistency()
       saw_stream_start(FALSE),
       saw_serialized_event(FALSE) {}
 
-Probe::Probe(element_id_t id, const common::uri::Url& url, IBaseStream* stream)
+Probe::Probe(element_id_t id, const common::uri::GURL& url, IBaseStream* stream)
     : stream_(stream), id_(id), id_buffer_(0), pad_(nullptr), consistency_(), url_(url) {
   CHECK(stream);
 }
@@ -36,7 +36,7 @@ Probe::~Probe() {
   Clear();
 }
 
-const common::uri::Url& Probe::GetUrl() const {
+const common::uri::GURL& Probe::GetUrl() const {
   return url_;
 }
 
@@ -70,7 +70,7 @@ void Probe::destroy_callback_probe(gpointer user_data) {
   probe->ClearInner();
 }
 
-InputProbe::InputProbe(element_id_t id, const common::uri::Url& url, IBaseStream* stream)
+InputProbe::InputProbe(element_id_t id, const common::uri::GURL& url, IBaseStream* stream)
     : base_class(id, url, stream) {}
 
 GstPadProbeReturn InputProbe::source_callback_probe_buffer(GstPad* pad, GstPadProbeInfo* info, gpointer user_data) {
@@ -191,7 +191,7 @@ void InputProbe::Link(GstPad* pad) {
   DEBUG_LOG() << "Input probe added id: " << id_probe;
 }
 
-OutputProbe::OutputProbe(element_id_t id, const common::uri::Url& url, bool need_push, IBaseStream* stream)
+OutputProbe::OutputProbe(element_id_t id, const common::uri::GURL& url, bool need_push, IBaseStream* stream)
     : base_class(id, url, stream), need_push_(need_push) {}
 
 GstPadProbeReturn OutputProbe::sink_callback_probe_buffer(GstPad* pad, GstPadProbeInfo* info, gpointer user_data) {

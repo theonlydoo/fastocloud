@@ -18,8 +18,6 @@
 
 #include <gst/gstelement.h>
 
-#include <common/uri/url.h>
-
 #include "stream/config.h"
 #include "stream/gst_types.h"
 #include "stream/ilinker.h"
@@ -58,8 +56,8 @@ class IBaseBuilder : public ILinker {
 
   virtual bool InitPipeline() WARN_UNUSED_RESULT = 0;
 
-  void HandleInputSrcPadCreated(pad::Pad* pad, element_id_t id, const common::uri::Url& url);
-  void HandleOutputSinkPadCreated(pad::Pad* pad, element_id_t id, const common::uri::Url& url, bool need_push);
+  void HandleInputSrcPadCreated(pad::Pad* pad, element_id_t id, const common::uri::GURL& url);
+  void HandleOutputSinkPadCreated(pad::Pad* pad, element_id_t id, const common::uri::GURL& url, bool need_push);
 
  private:
   const Config* const config_;

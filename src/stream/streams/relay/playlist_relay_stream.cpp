@@ -120,9 +120,8 @@ FILE* PlaylistRelayStream::OpenNextFile() {
   }
 
   InputUri iuri = input[curent_pos_++];
-  common::uri::Url uri = iuri.GetInput();
-  common::uri::Upath path = uri.GetPath();
-  std::string cur_path = path.GetPath();
+  common::uri::GURL uri = iuri.GetInput();
+  std::string cur_path = uri.path();
   FILE* file = fopen(cur_path.c_str(), "rb");
   if (file) {
     INFO_LOG() << "File " << cur_path << " open for playing";

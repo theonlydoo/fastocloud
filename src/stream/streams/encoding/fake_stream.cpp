@@ -25,8 +25,8 @@ FakeStream::FakeStream(EncodeConfig* config, IStreamClient* client)
                      client,
                      new StreamStruct(StreamInfo{"fake",
                                                  fastotv::ENCODE,
-                                                 {InputUri(0, common::uri::Url())},
-                                                 {OutputUri(0, common::uri::Url())}})) {}
+                                                 {InputUri(0, common::uri::GURL())},
+                                                 {OutputUri(0, common::uri::GURL())}})) {}
 
 const char* FakeStream::ClassName() const {
   return "FakeStream";

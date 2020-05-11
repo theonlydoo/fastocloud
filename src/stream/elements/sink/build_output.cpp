@@ -16,8 +16,6 @@
 
 #include <string>
 
-#include <common/uri/url.h>
-
 #include "base/output_uri.h"  // for OutputUri, IsFakeUrl
 
 #include "stream/elements/sink/http.h"  // for build_http_sink, HlsOutput
@@ -32,11 +30,10 @@ namespace elements {
 namespace sink {
 
 Element* build_output(const OutputUri& output, element_id_t sink_id, bool is_vod) {
-  common::uri::Url uri = output.GetOutput();
-  common::uri::Url::scheme scheme = uri.GetScheme();
+  common::uri::GURL uri = output.GetOutput();
 
-  if (scheme == common::uri::Url::udp) {
-    const std::string url = uri.GetHost();
+  if (uri.SchemeIs("udp")) {
+    const std::string url = uri.host();
     common::net::HostAndPort host;
     if (!common::ConvertFromString(url, &host)) {
       NOTREACHED() << "Unknown output url: " << url;
@@ -44,8 +41,8 @@ Element* build_output(const OutputUri& output, element_id_t sink_id, bool is_vod
     }
     ElementUDPSink* udp_sink = elements::sink::make_udp_sink(host, sink_id);
     return udp_sink;
-  } else if (scheme == common::uri::Url::tcp) {
-    const std::string url = uri.GetHost();
+  } else if (uri.SchemeIs("tcp")) {
+    const std::string url = uri.host();
     common::net::HostAndPort host;
     if (!common::ConvertFromString(url, &host)) {
       NOTREACHED() << "Unknown output url: " << url;
@@ -53,17 +50,16 @@ Element* build_output(const OutputUri& output, element_id_t sink_id, bool is_vod
     }
     ElementTCPServerSink* tcp_sink = elements::sink::make_tcp_server_sink(host, sink_id);
     return tcp_sink;
-  } else if (scheme == common::uri::Url::rtmp) {
-    ElementRtmpSink* rtmp_sink = elements::sink::make_rtmp_sink(sink_id, uri.GetUrl());
+  } else if (uri.SchemeIs("rtmp")) {
+    ElementRtmpSink* rtmp_sink = elements::sink::make_rtmp_sink(sink_id, uri.spec());
     return rtmp_sink;
-  } else if (scheme == common::uri::Url::http) {
+  } else if (uri.SchemeIsHTTPOrHTTPS()) {
     const auto http_root = output.GetHttpRoot();
     if (!http_root) {
       NOTREACHED() << "Invalid http_root";
       return nullptr;
     }
-    const common::uri::Upath upath = uri.GetPath();
-    const std::string filename = upath.GetFileName();
+    const std::string filename = uri.ExtractFileName();
     if (filename.empty()) {
       NOTREACHED() << "Empty playlist name, please create urls like http://localhost/master.m3u8";
       return nullptr;
@@ -72,12 +68,12 @@ Element* build_output(const OutputUri& output, element_id_t sink_id, bool is_vod
         is_vod ? MakeVodHlsOutput(uri, *http_root, filename) : MakeHlsOutput(uri, *http_root, filename);
     ElementHLSSink* http_sink = elements::sink::make_http_sink(sink_id, hout);
     return http_sink;
-  } else if (scheme == common::uri::Url::srt) {
-    ElementSrtSink* srt_sink = elements::sink::make_srt_sink(uri.GetUrl(), sink_id);
+  } else if (uri.SchemeIs("srt")) {
+    ElementSrtSink* srt_sink = elements::sink::make_srt_sink(uri.spec(), sink_id);
     return srt_sink;
   }
 
-  NOTREACHED() << "Unknown output url: " << uri.GetUrl();
+  NOTREACHED() << "Unknown output url: " << uri.spec();
   return nullptr;
 }
 

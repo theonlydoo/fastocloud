@@ -18,7 +18,6 @@
 
 #include <common/draw/types.h>
 #include <common/sprintf.h>
-#include <common/uri/url.h>
 
 #include "stream/gst_types.h"
 #include "stream/ilinker.h"  // for ILinker (ptr only), elements_line_t

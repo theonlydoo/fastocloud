@@ -15,7 +15,6 @@
 #pragma once
 
 #include <common/sprintf.h>
-#include <common/uri/url.h>
 
 #include "stream/elements/element.h"
 #include "stream/stypes.h"
@@ -50,7 +49,7 @@ ElementFLVMux* make_flvmux(bool streamable, element_id_t muxer_id);
 ElementRTPMux* make_rtpmux(element_id_t muxer_id);
 ElementMPEGTSMux* make_mpegtsmux(element_id_t muxer_id);
 
-Element* make_muxer(common::uri::Url::scheme scheme, element_id_t muxer_id);
+Element* make_muxer(const common::uri::GURL& url, element_id_t muxer_id);
 
 }  // namespace muxer
 }  // namespace elements

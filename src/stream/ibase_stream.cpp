@@ -100,15 +100,15 @@ IBaseStream::IBaseStream(const Config* config, IStreamClient* client, StreamStru
   CHECK_EQ(GetType(), config_->GetType());
 }
 
-void IBaseStream::LinkInputPad(GstPad* pad, element_id_t id, const common::uri::Url& url) {
-  DEBUG_LOG() << "InputPad created id: " << id << ", url: " << url.GetUrl();
+void IBaseStream::LinkInputPad(GstPad* pad, element_id_t id, const common::uri::GURL& url) {
+  DEBUG_LOG() << "InputPad created id: " << id << ", url: " << url.spec();
   InputProbe* probe = new InputProbe(id, url, this);
   probe->Link(pad);
   probe_in_.push_back(probe);
 }
 
-void IBaseStream::LinkOutputPad(GstPad* pad, element_id_t id, const common::uri::Url& url, bool need_push) {
-  DEBUG_LOG() << "OutputPad created id: " << id << ", url: " << url.GetUrl();
+void IBaseStream::LinkOutputPad(GstPad* pad, element_id_t id, const common::uri::GURL& url, bool need_push) {
+  DEBUG_LOG() << "OutputPad created id: " << id << ", url: " << url.spec();
   OutputProbe* probe = new OutputProbe(id, url, need_push, this);
   probe->Link(pad);
   probe_out_.push_back(probe);
@@ -118,10 +118,8 @@ void IBaseStream::PreExecCleanup(time_t old_life_time) {
   const fastotv::timestamp_t cur_timestamp = common::time::current_utc_mstime();
   const fastotv::timestamp_t max_life_time = IsVod() ? cur_timestamp : cur_timestamp - old_life_time * 1000;
   for (const OutputUri& output : config_->GetOutput()) {
-    common::uri::Url uri = output.GetOutput();
-    common::uri::Url::scheme scheme = uri.GetScheme();
-
-    if (scheme == common::uri::Url::http) {
+    auto uri = output.GetOutput();
+    if (uri.SchemeIsHTTPOrHTTPS()) {
       const auto http_path = output.GetHttpRoot();
       if (http_path) {
         RemoveOldFilesByTime(*http_path, max_life_time / 1000, "*" CHUNK_EXT);
@@ -439,9 +437,8 @@ GstBusSyncReply IBaseStream::HandleSyncBusMessageReceived(GstBus* bus, GstMessag
       const char* file_path_str = gst_structure_get_string(structure, "filename");
       // gst_structure_get_clock_time(structure, "running-time", &running_time);
       for (const OutputUri& output : config_->GetOutput()) {
-        common::uri::Url uri = output.GetOutput();
-        common::uri::Url::scheme scheme = uri.GetScheme();
-        if (scheme == common::uri::Url::http || scheme == common::uri::Url::https) {
+        auto uri = output.GetOutput();
+        if (uri.SchemeIsHTTPOrHTTPS()) {
           const auto hlst = output.GetHlsType();
           if (hlst && *hlst == OutputUri::HLS_PUSH) {
             // HLS PUSH
@@ -462,9 +459,8 @@ void IBaseStream::OnOutputDataFailed() {
   bool is_lazy_streams = false;
   // #FIXME, sinks on pads not generate speed
   for (const OutputUri& output : config_->GetOutput()) {
-    common::uri::Url uri = output.GetOutput();
-    common::uri::Url::scheme scheme = uri.GetScheme();
-    if (scheme == common::uri::Url::srt || scheme == common::uri::Url::udp) {
+    common::uri::GURL uri = output.GetOutput();
+    if (uri.SchemeIs("srt") || uri.SchemeIs("udp")) {
       is_lazy_streams = true;
       break;
     }
@@ -569,9 +565,8 @@ gboolean IBaseStream::HandleAsyncBusMessageReceived(GstBus* bus, GstMessage* mes
   } else if (type == GST_MESSAGE_DURATION_CHANGED) {
     input_t input = config_->GetInput();
     for (size_t i = 0; i < input.size(); ++i) {
-      common::uri::Url input_url = input[i].GetInput();
-      common::uri::Url::scheme sh = input_url.GetScheme();
-      if (sh == common::uri::Url::http || sh == common::uri::Url::https) {
+      auto input_url = input[i].GetInput();
+      if (input_url.SchemeIsHTTPOrHTTPS()) {
         GstBaseSrc* basesrc = reinterpret_cast<GstBaseSrc*>(src);
         UpdateInputProbeStats(probe_in_[i], basesrc->segment.duration);
       }
@@ -641,7 +636,7 @@ void IBaseStream::HandleOutputProbeEvent(OutputProbe* probe, GstEvent* event) {
             const std::string location = hls_sink->GetLocation();
             const common::file_system::ascii_file_string_path fs_template(location);
             delete hls_sink;
-            const common::uri::Url url = probe->GetUrl();
+            const common::uri::GURL url = probe->GetUrl();
             if (fs_template.IsValid()) {
               if (event_type == GST_EVENT_CUSTOM_UPSTREAM) {
                 GstClockTime running_time = 0;
@@ -650,7 +645,7 @@ void IBaseStream::HandleOutputProbeEvent(OutputProbe* probe, GstEvent* event) {
                 if (gst_video_event_parse_upstream_force_key_unit(event, &running_time, &all_headers, &count)) {
                   DEBUG_LOG() << "New keyframe up, running_time: " << running_time << ", all_headers: " << all_headers
                               << ", count: " << count << ", location: " << fs_template.GetParentDirectory()
-                              << ", url: " << url.GetUrl();
+                              << ", url: " << url.spec();
                 }
               } else if (event_type == GST_EVENT_CUSTOM_DOWNSTREAM) {
                 GstClockTime timestamp = 0;
@@ -663,7 +658,7 @@ void IBaseStream::HandleOutputProbeEvent(OutputProbe* probe, GstEvent* event) {
                   DEBUG_LOG() << "New keyframe down, timestamp: " << timestamp << ", stream_time: " << stream_time
                               << ", running_time: " << running_time << ", all_headers: " << all_headers
                               << ", count: " << count << ", location: " << fs_template.GetParentDirectory()
-                              << ", url: " << url.GetUrl();
+                              << ", url: " << url.spec();
                 }
               }
             }
