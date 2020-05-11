@@ -27,8 +27,8 @@ namespace fastocloud {
 
 class RSVGLogo : public common::serializer::JsonSerializer<RSVGLogo> {
  public:
-  typedef common::uri::GURL url_t;
   typedef common::Optional<common::draw::Size> image_size_t;
+  typedef common::uri::GURL url_t;
   RSVGLogo();
   RSVGLogo(const url_t& path, const common::draw::Point& position);
 

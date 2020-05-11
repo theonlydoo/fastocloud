@@ -28,10 +28,14 @@ HlsOutput MakeHlsOutput(const common::uri::GURL& uri,
                         const std::string& filename) {
   elements::sink::HlsOutput hout;
   const std::string http_root_str = http_root.GetPath();
+  const common::file_system::ascii_directory_string_path dir(http_root_str);
   fastotv::timestamp_t t = common::time::current_utc_mstime();
-  hout.location = http_root_str + GenHttpTsTemplate(t);
-  hout.play_locataion = http_root_str + filename;
-  hout.playlist_root = uri.path();
+  const auto ts = dir.MakeFileStringPath(GenHttpTsTemplate(t));
+
+  hout.location = ts->GetPath();
+  const auto location = dir.MakeFileStringPath(filename);
+  hout.play_locataion = location->GetPath();
+  hout.playlist_root = location->GetDirectory();
   hout.paylist_length = 5;
   hout.max_files = 10;
   return hout;
@@ -42,9 +46,13 @@ HlsOutput MakeVodHlsOutput(const common::uri::GURL& uri,
                            const std::string& filename) {
   elements::sink::HlsOutput hout;
   const std::string http_root_str = http_root.GetPath();
-  hout.location = http_root_str + GenVodHttpTsTemplate();
-  hout.play_locataion = http_root_str + filename;
-  hout.playlist_root = uri.path();
+  const common::file_system::ascii_directory_string_path dir(http_root_str);
+  const auto ts = dir.MakeFileStringPath(GenVodHttpTsTemplate());
+
+  hout.location = ts->GetPath();
+  const auto location = dir.MakeFileStringPath(filename);
+  hout.play_locataion = location->GetPath();
+  hout.playlist_root = location->GetDirectory();
   hout.paylist_length = 0;
   hout.max_files = 0;
   return hout;
