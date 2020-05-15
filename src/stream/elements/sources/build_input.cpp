@@ -62,25 +62,15 @@ Element* make_src(const InputUri& uri, element_id_t input_id, gint timeout_secs)
     }
 
     return make_http_src(url.spec(), agent, uri.GetHttpProxyUrl(), timeout_secs, input_id);
-  } else if (url.SchemeIs("udp")) {
+  } else if (url.SchemeIsUdp()) {
     // udp://localhost:8080
-    std::string host_str = url.host();
-    common::net::HostAndPort host;
-    if (!common::ConvertFromString(host_str, &host)) {
-      NOTREACHED() << "Unknown input url: " << host_str;
-      return nullptr;
-    }
+    common::net::HostAndPort host(url.host(), url.IntPort());
     return make_udp_src(host, uri.GetMulticastIface(), input_id);
   } else if (url.SchemeIs("rtmp")) {
     return make_rtmp_src(url.spec(), timeout_secs, input_id);
   } else if (url.SchemeIs("tcp")) {
     // tcp://localhost:8080
-    std::string host_str = url.host();
-    common::net::HostAndPort host;
-    if (!common::ConvertFromString(host_str, &host)) {
-      NOTREACHED() << "Unknown input url: " << host_str;
-      return nullptr;
-    }
+    common::net::HostAndPort host(url.host(), url.IntPort());
     return make_tcp_server_src(host, input_id);
   } else if (url.SchemeIs("srt")) {
     return make_srt_src(url.spec(), input_id);

@@ -32,22 +32,12 @@ namespace sink {
 Element* build_output(const OutputUri& output, element_id_t sink_id, bool is_vod) {
   common::uri::GURL uri = output.GetOutput();
 
-  if (uri.SchemeIs("udp")) {
-    const std::string url = uri.host();
-    common::net::HostAndPort host;
-    if (!common::ConvertFromString(url, &host)) {
-      NOTREACHED() << "Unknown output url: " << url;
-      return nullptr;
-    }
+  if (uri.SchemeIsUdp()) {
+    common::net::HostAndPort host(uri.host(), uri.IntPort());
     ElementUDPSink* udp_sink = elements::sink::make_udp_sink(host, sink_id);
     return udp_sink;
   } else if (uri.SchemeIs("tcp")) {
-    const std::string url = uri.host();
-    common::net::HostAndPort host;
-    if (!common::ConvertFromString(url, &host)) {
-      NOTREACHED() << "Unknown output url: " << url;
-      return nullptr;
-    }
+    common::net::HostAndPort host(uri.host(), uri.IntPort());
     ElementTCPServerSink* tcp_sink = elements::sink::make_tcp_server_sink(host, sink_id);
     return tcp_sink;
   } else if (uri.SchemeIs("rtmp")) {
