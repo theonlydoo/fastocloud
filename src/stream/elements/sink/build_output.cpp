@@ -33,29 +33,24 @@ Element* build_output(const OutputUri& output, element_id_t sink_id, bool is_vod
   common::uri::GURL uri = output.GetOutput();
 
   if (uri.SchemeIsUdp()) {
-    common::net::HostAndPort host(uri.host(), uri.IntPort());
+    common::net::HostAndPort host(uri.host(), uri.EffectiveIntPort());
     ElementUDPSink* udp_sink = elements::sink::make_udp_sink(host, sink_id);
     return udp_sink;
-  } else if (uri.SchemeIs("tcp")) {
-    common::net::HostAndPort host(uri.host(), uri.IntPort());
+  } else if (uri.SchemeIsTcp()) {
+    common::net::HostAndPort host(uri.host(), uri.EffectiveIntPort());
     ElementTCPServerSink* tcp_sink = elements::sink::make_tcp_server_sink(host, sink_id);
     return tcp_sink;
-  } else if (uri.SchemeIs("rtmp")) {
+  } else if (uri.SchemeIsRtmp()) {
     ElementRtmpSink* rtmp_sink = elements::sink::make_rtmp_sink(sink_id, uri.spec());
     return rtmp_sink;
   } else if (uri.SchemeIsHTTPOrHTTPS()) {
     const auto http_root = output.GetHttpRoot();
-    if (!http_root) {
-      NOTREACHED() << "Invalid http_root";
+    elements::sink::HlsOutput hout;
+    common::Error err = is_vod ? MakeVodHlsOutput(uri, http_root, &hout) : MakeHlsOutput(uri, http_root, &hout);
+    if (err) {
+      NOTREACHED() << err->GetDescription();
       return nullptr;
     }
-    const std::string filename = uri.ExtractFileName();
-    if (filename.empty()) {
-      NOTREACHED() << "Empty playlist name, please create urls like http://localhost/master.m3u8";
-      return nullptr;
-    }
-    elements::sink::HlsOutput hout =
-        is_vod ? MakeVodHlsOutput(uri, *http_root, filename) : MakeHlsOutput(uri, *http_root, filename);
     ElementHLSSink* http_sink = elements::sink::make_http_sink(sink_id, hout);
     return http_sink;
   } else if (uri.SchemeIs("srt")) {

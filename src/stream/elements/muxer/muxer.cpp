@@ -34,11 +34,11 @@ ElementRTPMux* make_rtpmux(element_id_t muxer_id) {
 }
 
 Element* make_muxer(const common::uri::GURL& url, element_id_t muxer_id) {
-  if (url.SchemeIs("rtmp")) {
+  if (url.SchemeIsRtmp()) {
     return make_flvmux(true, muxer_id);
-  } else if (url.SchemeIs("udp")) {
+  } else if (url.SchemeIsUdp()) {
     return make_rtpmux(muxer_id);
-  } else if (url.SchemeIs("tcp")) {
+  } else if (url.SchemeIsTcp()) {
     return make_mpegtsmux(muxer_id);
   } else if (url.SchemeIsHTTPOrHTTPS()) {
     return make_mpegtsmux(muxer_id);

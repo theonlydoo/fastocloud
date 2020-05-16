@@ -64,13 +64,13 @@ Element* make_src(const InputUri& uri, element_id_t input_id, gint timeout_secs)
     return make_http_src(url.spec(), agent, uri.GetHttpProxyUrl(), timeout_secs, input_id);
   } else if (url.SchemeIsUdp()) {
     // udp://localhost:8080
-    common::net::HostAndPort host(url.host(), url.IntPort());
+    common::net::HostAndPort host(url.host(), url.EffectiveIntPort());
     return make_udp_src(host, uri.GetMulticastIface(), input_id);
-  } else if (url.SchemeIs("rtmp")) {
+  } else if (url.SchemeIsRtmp()) {
     return make_rtmp_src(url.spec(), timeout_secs, input_id);
-  } else if (url.SchemeIs("tcp")) {
+  } else if (url.SchemeIsTcp()) {
     // tcp://localhost:8080
-    common::net::HostAndPort host(url.host(), url.IntPort());
+    common::net::HostAndPort host(url.host(), url.EffectiveIntPort());
     return make_tcp_server_src(host, input_id);
   } else if (url.SchemeIs("srt")) {
     return make_srt_src(url.spec(), input_id);

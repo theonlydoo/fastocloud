@@ -37,12 +37,12 @@ struct HlsOutput {
   uint32_t max_files;
 };
 
-HlsOutput MakeHlsOutput(const common::uri::GURL& uri,
-                        const common::file_system::ascii_directory_string_path& http_root,
-                        const std::string& filename);
-HlsOutput MakeVodHlsOutput(const common::uri::GURL& uri,
-                           const common::file_system::ascii_directory_string_path& http_root,
-                           const std::string& filename);
+common::Error MakeHlsOutput(const common::uri::GURL& uri,
+                            const common::Optional<common::file_system::ascii_directory_string_path>& http_root,
+                            HlsOutput* out);
+common::Error MakeVodHlsOutput(const common::uri::GURL& uri,
+                               const common::Optional<common::file_system::ascii_directory_string_path>& http_root,
+                               HlsOutput* out);
 
 class ElementHLSSink : public ElementBinEx<ELEMENT_HLS_SINK> {
  public:

@@ -68,7 +68,7 @@ IBaseStream* StreamsFactory::CreateStream(const Config* config,
     }
 
     InputUri iuri = input[0];
-    if (iuri.GetInput().SchemeIs("rtsp")) {
+    if (iuri.GetInput().SchemeIsRtsp()) {
       return new streams::RtspRelayStream(rconfig, client, stats);
     }
 
@@ -97,7 +97,7 @@ IBaseStream* StreamsFactory::CreateStream(const Config* config,
 
     if (iuri.GetInput().SchemeIsDev()) {
       return new streams::encoding::DeviceStream(econfig, client, stats);
-    } else if (iuri.GetInput().SchemeIs("rtsp")) {
+    } else if (iuri.GetInput().SchemeIsRtsp()) {
       return new streams::RtspEncodingStream(econfig, client, stats);
     }
 

@@ -101,7 +101,7 @@ void SrcDecodeBinStream::decodebin_element_added_callback(GstBin* bin, GstElemen
     input_t input = config->GetInput();
     for (size_t i = 0; i < input.size(); ++i) {
       common::uri::GURL input_url = input[i].GetInput();
-      if (input_url.SchemeIs("udp")) {
+      if (input_url.SchemeIsUdp()) {
         const auto pid = input[i].GetProgramNumber();
         if (pid) {
           elements::ElementTsDemux* tsdemux = new elements::ElementTsDemux("demux", element);

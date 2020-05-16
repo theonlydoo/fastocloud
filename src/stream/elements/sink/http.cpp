@@ -23,39 +23,65 @@ namespace stream {
 namespace elements {
 namespace sink {
 
-HlsOutput MakeHlsOutput(const common::uri::GURL& uri,
-                        const common::file_system::ascii_directory_string_path& http_root,
-                        const std::string& filename) {
-  elements::sink::HlsOutput hout;
-  const std::string http_root_str = http_root.GetPath();
-  const common::file_system::ascii_directory_string_path dir(http_root_str);
+common::Error MakeHlsOutput(const common::uri::GURL& uri,
+                            const common::Optional<common::file_system::ascii_directory_string_path>& http_root,
+                            HlsOutput* out) {
+  if (!out) {
+    return common::make_error_inval();
+  }
+
+  if (!http_root) {
+    return common::make_error("Invalid http_root");
+  }
+
+  const std::string filename = uri.ExtractFileName();
+  if (filename.empty()) {
+    return common::make_error("Empty playlist name, please create urls like http://localhost/master.m3u8");
+  }
+
+  const common::file_system::ascii_directory_string_path dir(http_root->GetPath());
   fastotv::timestamp_t t = common::time::current_utc_mstime();
   const auto ts = dir.MakeFileStringPath(GenHttpTsTemplate(t));
-
-  hout.location = ts->GetPath();
   const auto location = dir.MakeFileStringPath(filename);
+
+  elements::sink::HlsOutput hout;
+  hout.location = ts->GetPath();
   hout.play_locataion = location->GetPath();
   hout.playlist_root = location->GetDirectory();
   hout.paylist_length = 5;
   hout.max_files = 10;
-  return hout;
+  *out = hout;
+  return common::Error();
 }
 
-HlsOutput MakeVodHlsOutput(const common::uri::GURL& uri,
-                           const common::file_system::ascii_directory_string_path& http_root,
-                           const std::string& filename) {
-  elements::sink::HlsOutput hout;
-  const std::string http_root_str = http_root.GetPath();
-  const common::file_system::ascii_directory_string_path dir(http_root_str);
-  const auto ts = dir.MakeFileStringPath(GenVodHttpTsTemplate());
+common::Error MakeVodHlsOutput(const common::uri::GURL& uri,
+                               const common::Optional<common::file_system::ascii_directory_string_path>& http_root,
+                               HlsOutput* out) {
+  if (!out) {
+    return common::make_error_inval();
+  }
 
-  hout.location = ts->GetPath();
+  if (!http_root) {
+    return common::make_error("Invalid http_root");
+  }
+
+  const std::string filename = uri.ExtractFileName();
+  if (filename.empty()) {
+    return common::make_error("Empty playlist name, please create urls like http://localhost/master.m3u8");
+  }
+
+  const common::file_system::ascii_directory_string_path dir(http_root->GetPath());
+  const auto ts = dir.MakeFileStringPath(GenVodHttpTsTemplate());
   const auto location = dir.MakeFileStringPath(filename);
+
+  elements::sink::HlsOutput hout;
+  hout.location = ts->GetPath();
   hout.play_locataion = location->GetPath();
   hout.playlist_root = location->GetDirectory();
   hout.paylist_length = 0;
   hout.max_files = 0;
-  return hout;
+  *out = hout;
+  return common::Error();
 }
 
 void ElementHLSSink::SetLocation(const std::string& location) {

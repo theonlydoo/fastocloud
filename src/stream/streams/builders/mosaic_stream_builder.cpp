@@ -273,7 +273,7 @@ void MosaicStreamBuilder::BuildOutput(elements::Element* video, elements::Elemen
     }
 
     common::uri::GURL uri = output.GetOutput();
-    bool is_rtp_out = uri.SchemeIs("udp");
+    bool is_rtp_out = uri.SchemeIsUdp();
     const std::string vcodec = config->GetVideoEncoder();
     elements::Element* mux = elements::muxer::make_muxer(uri, i);
     ElementAdd(mux);
