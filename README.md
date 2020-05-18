@@ -68,7 +68,7 @@ About FastoCloud
 * Livepeer mining crypto
 * CCTV Monitoring service
 * Screen recording
-* Branded video apps
+* Personal branded video apps
 * Own video streaming platform on web, tablet and TV
 
 Visit our site: [fastocloud.com](https://fastocloud.com)
