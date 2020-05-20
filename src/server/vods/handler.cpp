@@ -196,9 +196,9 @@ void VodsHandler::ProcessReceived(VodsClient* hclient, const char* request, size
     }
 
     const std::string fileName = url.ExtractFileName();
-    const std::string mime = common::http::MimeTypes::GetType(fileName.c_str());
-    common::ErrnoError err = hclient->SendHeaders(protocol, common::http::HS_OK, extra_header, mime.c_str(),
-                                                  &sb.st_size, &sb.st_mtime, IsKeepAlive, hinf);
+    const char* mime = common::http::MimeTypes::GetType(fileName.c_str());
+    common::ErrnoError err = hclient->SendHeaders(protocol, common::http::HS_OK, extra_header, mime, &sb.st_size,
+                                                  &sb.st_mtime, IsKeepAlive, hinf);
     if (err) {
       DEBUG_MSG_ERROR(err, common::logging::LOG_LEVEL_ERR);
       ::close(file);
