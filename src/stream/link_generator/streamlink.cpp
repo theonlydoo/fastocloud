@@ -19,12 +19,26 @@
 #include <common/sprintf.h>
 
 namespace {
-bool GetTrueUrl(const std::string& path, const common::uri::GURL& url, common::uri::GURL* generated_url) {
+bool GetTrueUrl(const std::string& path,
+                const common::uri::GURL& url,
+                const fastotv::StreamLink& link,
+                common::uri::GURL* generated_url) {
   if (!generated_url) {
     return false;
   }
 
-  const std::string cmd_line = common::MemSPrintf("%s %s best --stream-url", path, url.spec());
+  std::string cmd_line = path + " --stream-url";
+  const auto http = link.GetHttp();
+  if (http) {
+    cmd_line += " --http-proxy=" + http->spec();
+  }
+
+  const auto https = link.GetHttps();
+  if (https) {
+    cmd_line += " --https-proxy=" + https->spec();
+  }
+
+  cmd_line += " " + url.spec() + " best";
   FILE* fp = popen(cmd_line.c_str(), "r");
   if (!fp) {
     return false;
@@ -65,16 +79,12 @@ bool StreamLinkGenerator::Generate(const InputUri& src, InputUri* out) const {
     return false;
   }
 
-  if (!*str) {
-    return false;
-  }
-
   if (!script_path_.IsValid()) {
     return false;
   }
 
   common::uri::GURL gen;
-  if (!GetTrueUrl(script_path_.GetPath(), src.GetInput(), &gen)) {
+  if (!GetTrueUrl(script_path_.GetPath(), src.GetInput(), *str, &gen)) {
     return false;
   }
 
