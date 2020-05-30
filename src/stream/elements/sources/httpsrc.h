@@ -17,8 +17,6 @@
 #include <string>
 #include <vector>
 
-#include <fastotv/types/http_proxy.h>
-
 #include "stream/elements/sources/sources.h"  // for ElementLocation
 
 namespace fastocloud {
@@ -45,7 +43,7 @@ class ElementSoupHTTPSrc : public ElementLocation<ELEMENT_SOUP_HTTP_SRC> {
 
 ElementSoupHTTPSrc* make_http_src(const std::string& location,
                                   const common::Optional<std::string>& user_agent,
-                                  common::Optional<fastotv::HttpProxy> proxy,
+                                  common::Optional<common::uri::GURL> proxy,
                                   gint timeout_secs,
                                   element_id_t input_id);
 

@@ -29,7 +29,7 @@ void ElementH264Parse::SetDisablePassthrough(gboolean pass) {
   SetProperty("disable-passthrough", pass);
 }
 
-void ElementH265Parse::SetConfigInterval(guint interval) {
+void ElementH265Parse::SetConfigInterval(gint interval) {
   SetProperty("config-interval", interval);
 }
 
@@ -42,8 +42,7 @@ ElementTsParse* make_ts_parser(element_id_t parser_id) {
 }
 
 ElementH264Parse* make_h264_parser(element_id_t parser_id) {
-  ElementH264Parse* par = make_video_parser<ElementH264Parse>(parser_id);
-  return par;
+  return make_video_parser<ElementH264Parse>(parser_id);
 }
 
 ElementH265Parse* make_h265_parser(element_id_t parser_id) {

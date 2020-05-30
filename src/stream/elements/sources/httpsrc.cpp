@@ -62,7 +62,7 @@ void ElementSoupHTTPSrc::SetCookies(const std::vector<std::string>& cookies) {
 
 ElementSoupHTTPSrc* make_http_src(const std::string& location,
                                   const common::Optional<std::string>& user_agent,
-                                  common::Optional<fastotv::HttpProxy> proxy,
+                                  common::Optional<common::uri::GURL> proxy,
                                   gint timeout_secs,
                                   element_id_t input_id) {
   ElementSoupHTTPSrc* http_src = make_sources<ElementSoupHTTPSrc>(input_id);
@@ -72,15 +72,13 @@ ElementSoupHTTPSrc* make_http_src(const std::string& location,
     http_src->SetUserAgent(*user_agent);
   }
   if (proxy) {
-    http_src->SetProxy(proxy->GetUrl());
+    http_src->SetProxy(*proxy);
     http_src->SetAutomaticRedirect(false);
-    const auto user = proxy->GetUserID();
-    if (user) {
-      http_src->SetProxyID(*user);
+    if (proxy->has_username()) {
+      http_src->SetProxyID(proxy->username());
     }
-    const auto password = proxy->GetPassword();
-    if (password) {
-      http_src->SetProxyPW(*password);
+    if (proxy->has_password()) {
+      http_src->SetProxyPW(proxy->password());
     }
   }
   return http_src;

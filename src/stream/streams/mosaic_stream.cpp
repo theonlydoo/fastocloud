@@ -344,13 +344,13 @@ gboolean MosaicStream::HandleAsyncBusMessageReceived(GstBus* bus, GstMessage* me
 
   for (guint i = 0; i < rms_arr->n_values; ++i) {
     if (options_.sreams.size() > elem_id) {
-      const GValue* value = g_value_array_get_nth(rms_arr, i);
+      const GValue* value = rms_arr->values + i;
       options_.sreams[elem_id].sound.channels[i].rms_dB = g_value_get_double(value);
 
-      value = g_value_array_get_nth(peak_arr, i);
+      value = peak_arr->values + i;
       options_.sreams[elem_id].sound.channels[i].peak_dB = g_value_get_double(value);
 
-      value = g_value_array_get_nth(decay_arr, i);
+      value = decay_arr->values + i;
       options_.sreams[elem_id].sound.channels[i].decay_dB = g_value_get_double(value);
     }
   }

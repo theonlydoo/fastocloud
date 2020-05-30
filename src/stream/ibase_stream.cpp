@@ -435,6 +435,7 @@ GstBusSyncReply IBaseStream::HandleSyncBusMessageReceived(GstBus* bus, GstMessag
     if (strcmp(element_name, "GstMultiFileSink") == 0) {  // splitmuxsink-fragment-closed
       // GstClockTime running_time;
       const char* file_path_str = gst_structure_get_string(structure, "filename");
+      UNUSED(file_path_str);
       // gst_structure_get_clock_time(structure, "running-time", &running_time);
       for (const OutputUri& output : config_->GetOutput()) {
         auto uri = output.GetOutput();

@@ -41,7 +41,7 @@ class ElementH265Parse : public ElementBaseParse<ELEMENT_H265_PARSE> {
   typedef ElementBaseParse<ELEMENT_H265_PARSE> base_class;
   using base_class::base_class;
 
-  void SetConfigInterval(guint interval = 0);  // Range: 0 - 3600 Default: 0
+  void SetConfigInterval(gint interval = 0);  // Range: 0 - 3600 Default: 0
 };
 
 class ElementMpegParse : public ElementBaseParse<ELEMENT_MPEG_VIDEO_PARSE> {
