@@ -21,6 +21,7 @@
 
 #include <common/convert2string.h>
 #include <common/daemon/commands/activate_info.h>
+#include <common/daemon/commands/get_log_info.h>
 #include <common/daemon/commands/stop_info.h>
 #include <common/file_system/string_path_utils.h>
 #include <common/license/expire_license.h>
@@ -37,7 +38,6 @@
 #include "server/child_stream.h"
 #include "server/daemon/client.h"
 #include "server/daemon/commands.h"
-#include "server/daemon/commands_info/service/get_log_info.h"
 #include "server/daemon/commands_info/service/prepare_info.h"
 #include "server/daemon/commands_info/service/server_info.h"
 #include "server/daemon/commands_info/service/sync_info.h"
@@ -957,25 +957,39 @@ common::ErrnoError ProcessSlaveWrapper::HandleRequestClientGetLogStream(Protocol
 
   if (req->params) {
     const char* params_ptr = req->params->c_str();
-    json_object* jgetlog_info = json_tokener_parse(params_ptr);
-    if (!jgetlog_info) {
+    json_object* jlog = json_tokener_parse(params_ptr);
+    if (!jlog) {
       return common::make_errno_error_inval();
     }
 
     stream::GetLogInfo log_info;
-    common::Error err_des = log_info.DeSerialize(jgetlog_info);
-    json_object_put(jgetlog_info);
+    common::Error err_des = log_info.DeSerialize(jlog);
+    json_object_put(jlog);
     if (err_des) {
+      ignore_result(dclient->GetLogStreamFail(req->id, err_des));
       const std::string err_str = err_des->GetDescription();
       return common::make_errno_error(err_str, EAGAIN);
     }
 
     const auto remote_log_path = log_info.GetLogPath();
-    if (remote_log_path.SchemeIsHTTPOrHTTPS()) {
-      const auto stream_log_file = MakeStreamLogPath(log_info.GetFeedbackDir());
-      if (stream_log_file) {
-        common::net::PostHttpFile(*stream_log_file, remote_log_path);
-      }
+    if (!remote_log_path.SchemeIsHTTPOrHTTPS()) {
+      common::ErrnoError errn = common::make_errno_error("Not supported protocol", EAGAIN);
+      ignore_result(dclient->GetLogStreamFail(req->id, common::make_error_from_errno(errn)));
+      return errn;
+    }
+
+    const auto stream_log_file = MakeStreamLogPath(log_info.GetFeedbackDir());
+    if (!stream_log_file) {
+      common::ErrnoError errn = common::make_errno_error("Can't generate log stream path", EAGAIN);
+      ignore_result(dclient->GetLogStreamFail(req->id, common::make_error_from_errno(errn)));
+      return errn;
+    }
+
+    common::Error err = common::net::PostHttpFile(*stream_log_file, remote_log_path);
+    if (err) {
+      ignore_result(dclient->GetLogStreamFail(req->id, err));
+      const std::string err_str = err->GetDescription();
+      return common::make_errno_error(err_str, EAGAIN);
     }
     return dclient->GetLogStreamSuccess(req->id);
   }
@@ -992,27 +1006,41 @@ common::ErrnoError ProcessSlaveWrapper::HandleRequestClientGetPipelineStream(Pro
 
   if (req->params) {
     const char* params_ptr = req->params->c_str();
-    json_object* jgetpipe_info = json_tokener_parse(params_ptr);
-    if (!jgetpipe_info) {
+    json_object* jpipe = json_tokener_parse(params_ptr);
+    if (!jpipe) {
       return common::make_errno_error_inval();
     }
 
     stream::GetLogInfo pipeline_info;
-    common::Error err_des = pipeline_info.DeSerialize(jgetpipe_info);
-    json_object_put(jgetpipe_info);
+    common::Error err_des = pipeline_info.DeSerialize(jpipe);
+    json_object_put(jpipe);
     if (err_des) {
+      ignore_result(dclient->GetPipeStreamFail(req->id, err_des));
       const std::string err_str = err_des->GetDescription();
       return common::make_errno_error(err_str, EAGAIN);
     }
 
     const auto remote_log_path = pipeline_info.GetLogPath();
-    if (remote_log_path.SchemeIsHTTPOrHTTPS()) {
-      const auto stream_log_file = MakeStreamPipelinePath(pipeline_info.GetFeedbackDir());
-      if (stream_log_file) {
-        common::net::PostHttpFile(*stream_log_file, remote_log_path);
-      }
+    if (!remote_log_path.SchemeIsHTTPOrHTTPS()) {
+      common::ErrnoError errn = common::make_errno_error("Not supported protocol", EAGAIN);
+      ignore_result(dclient->GetPipeStreamFail(req->id, common::make_error_from_errno(errn)));
+      return errn;
     }
-    return dclient->GetLogStreamSuccess(req->id);
+
+    const auto pipe_file = MakeStreamPipelinePath(pipeline_info.GetFeedbackDir());
+    if (!pipe_file) {
+      common::ErrnoError errn = common::make_errno_error("Can't generate log stream path", EAGAIN);
+      ignore_result(dclient->GetLogStreamFail(req->id, common::make_error_from_errno(errn)));
+      return errn;
+    }
+
+    common::Error err = common::net::PostHttpFile(*pipe_file, remote_log_path);
+    if (err) {
+      ignore_result(dclient->GetPipeStreamFail(req->id, err));
+      const std::string err_str = err->GetDescription();
+      return common::make_errno_error(err_str, EAGAIN);
+    }
+    return dclient->GetPipeStreamSuccess(req->id);
   }
 
   return common::make_errno_error_inval();
@@ -1119,7 +1147,7 @@ void ProcessSlaveWrapper::AddStreamLine(const serialized_stream_t& config_args) 
     output_t output;
     if (read_output(config_args, &output)) {
       for (const OutputUri& out_uri : output) {
-        common::uri::GURL ouri = out_uri.GetOutput();
+        auto ouri = out_uri.GetOutput();
         if (ouri.SchemeIsHTTPOrHTTPS()) {
           const auto http_root = out_uri.GetHttpRoot();
           if (http_root) {
@@ -1133,7 +1161,7 @@ void ProcessSlaveWrapper::AddStreamLine(const serialized_stream_t& config_args) 
     output_t output;
     if (read_output(config_args, &output)) {
       for (const OutputUri& out_uri : output) {
-        common::uri::GURL ouri = out_uri.GetOutput();
+        auto ouri = out_uri.GetOutput();
         if (ouri.SchemeIsHTTPOrHTTPS()) {
           const auto http_root = out_uri.GetHttpRoot();
           if (http_root) {
@@ -1227,17 +1255,27 @@ common::ErrnoError ProcessSlaveWrapper::HandleRequestClientGetLogService(Protoco
       return common::make_errno_error_inval();
     }
 
-    service::GetLogInfo get_log_info;
+    common::daemon::commands::GetLogInfo get_log_info;
     common::Error err_des = get_log_info.DeSerialize(jlog);
     json_object_put(jlog);
     if (err_des) {
+      ignore_result(dclient->GetLogServiceFail(req->id, err_des));
       const std::string err_str = err_des->GetDescription();
       return common::make_errno_error(err_str, EAGAIN);
     }
 
     const auto remote_log_path = get_log_info.GetLogPath();
-    if (remote_log_path.SchemeIsHTTPOrHTTPS()) {
-      common::net::PostHttpFile(common::file_system::ascii_file_string_path(config_.log_path), remote_log_path);
+    if (!remote_log_path.SchemeIsHTTPOrHTTPS()) {
+      common::ErrnoError errn = common::make_errno_error("Not supported protocol", EAGAIN);
+      ignore_result(dclient->GetLogServiceFail(req->id, common::make_error_from_errno(errn)));
+      return errn;
+    }
+    common::Error err =
+        common::net::PostHttpFile(common::file_system::ascii_file_string_path(config_.log_path), remote_log_path);
+    if (err) {
+      ignore_result(dclient->GetLogServiceFail(req->id, err));
+      const std::string err_str = err->GetDescription();
+      return common::make_errno_error(err_str, EAGAIN);
     }
 
     return dclient->GetLogServiceSuccess(req->id);

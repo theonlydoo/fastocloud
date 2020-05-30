@@ -117,7 +117,6 @@ SET(SERVER_DAEMON_HEADERS
   ${CMAKE_SOURCE_DIR}/src/server/daemon/commands_info/service/sync_info.h
   ${CMAKE_SOURCE_DIR}/src/server/daemon/commands_info/service/server_info.h
   ${CMAKE_SOURCE_DIR}/src/server/daemon/commands_info/service/prepare_info.h
-  ${CMAKE_SOURCE_DIR}/src/server/daemon/commands_info/service/get_log_info.h
 
   ${CMAKE_SOURCE_DIR}/src/server/daemon/commands_info/stream/stream_info.h
   ${CMAKE_SOURCE_DIR}/src/server/daemon/commands_info/stream/start_info.h
@@ -137,7 +136,6 @@ SET(SERVER_DAEMON_SOURCES
   ${CMAKE_SOURCE_DIR}/src/server/daemon/commands_info/service/sync_info.cpp
   ${CMAKE_SOURCE_DIR}/src/server/daemon/commands_info/service/server_info.cpp
   ${CMAKE_SOURCE_DIR}/src/server/daemon/commands_info/service/prepare_info.cpp
-  ${CMAKE_SOURCE_DIR}/src/server/daemon/commands_info/service/get_log_info.cpp
 
   ${CMAKE_SOURCE_DIR}/src/server/daemon/commands_info/stream/stream_info.cpp
   ${CMAKE_SOURCE_DIR}/src/server/daemon/commands_info/stream/start_info.cpp

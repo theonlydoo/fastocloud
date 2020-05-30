@@ -87,5 +87,10 @@ common::Error GetLogStreamResponseFail(fastotv::protocol::sequance_id_t id,
                                        const std::string& error_text,
                                        fastotv::protocol::response_t* resp);
 
+common::Error GetPipeStreamResponseSuccess(fastotv::protocol::sequance_id_t id, fastotv::protocol::response_t* resp);
+common::Error GetPipeStreamResponseFail(fastotv::protocol::sequance_id_t id,
+                                        const std::string& error_text,
+                                        fastotv::protocol::response_t* resp);
+
 }  // namespace server
 }  // namespace fastocloud

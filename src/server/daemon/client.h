@@ -50,8 +50,14 @@ class ProtocoledDaemonClient : public fastotv::protocol::ProtocolClient<common::
   common::ErrnoError PrepareServiceSuccess(fastotv::protocol::sequance_id_t id,
                                            const std::string& result) WARN_UNUSED_RESULT;
 
+  common::ErrnoError GetLogServiceFail(fastotv::protocol::sequance_id_t id, common::Error err) WARN_UNUSED_RESULT;
   common::ErrnoError GetLogServiceSuccess(fastotv::protocol::sequance_id_t id) WARN_UNUSED_RESULT;
+
+  common::ErrnoError GetLogStreamFail(fastotv::protocol::sequance_id_t id, common::Error err) WARN_UNUSED_RESULT;
   common::ErrnoError GetLogStreamSuccess(fastotv::protocol::sequance_id_t id) WARN_UNUSED_RESULT;
+
+  common::ErrnoError GetPipeStreamFail(fastotv::protocol::sequance_id_t id, common::Error err) WARN_UNUSED_RESULT;
+  common::ErrnoError GetPipeStreamSuccess(fastotv::protocol::sequance_id_t id) WARN_UNUSED_RESULT;
 
   common::ErrnoError StartStreamFail(fastotv::protocol::sequance_id_t id, common::Error err) WARN_UNUSED_RESULT;
   common::ErrnoError StartStreamSuccess(fastotv::protocol::sequance_id_t id) WARN_UNUSED_RESULT;
