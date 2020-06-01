@@ -27,7 +27,7 @@
 #define HAVE_AUDIO_FIELD "have_audio"
 #define HAVE_SUBTITLE_FIELD "have_subtitle"
 #define DEINTERLACE_FIELD "deinterlace"
-#define FRAME_RATE_FIELD "framerate"
+#define FRAME_RATE_FIELD "frame_rate"
 #define AUDIO_CHANNELS_FIELD "audio_channels"
 #define VOLUME_FIELD "volume"
 #define VIDEO_PARSER_FIELD "video_parser"
