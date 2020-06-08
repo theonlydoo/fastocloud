@@ -209,7 +209,7 @@ int StreamController::Exec() {
       continue;
     }
 
-    if (diff_utc_time) {  // if longer work
+    if (is_longer_work) {  // if longer work
       restart_attempts_ = 0;
       continue;
     }
