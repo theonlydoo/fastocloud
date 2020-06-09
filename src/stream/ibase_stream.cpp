@@ -461,7 +461,7 @@ void IBaseStream::OnOutputDataFailed() {
   // #FIXME, sinks on pads not generate speed
   for (const OutputUri& output : config_->GetOutput()) {
     common::uri::GURL uri = output.GetOutput();
-    if (uri.SchemeIs("srt") || uri.SchemeIsUdp()) {
+    if (uri.SchemeIsSrt() || uri.SchemeIsUdp()) {
       is_lazy_streams = true;
       break;
     }

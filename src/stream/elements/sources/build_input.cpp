@@ -72,7 +72,7 @@ Element* make_src(const InputUri& uri, element_id_t input_id, gint timeout_secs)
     // tcp://localhost:8080
     common::net::HostAndPort host(url.host(), url.EffectiveIntPort());
     return make_tcp_server_src(host, input_id);
-  } else if (url.SchemeIs("srt")) {
+  } else if (url.SchemeIsSrt()) {
     return make_srt_src(url.spec(), input_id);
   }
 
