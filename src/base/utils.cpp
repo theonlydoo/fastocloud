@@ -95,12 +95,12 @@ void RemoveOldFilesByTime(const common::file_system::ascii_directory_string_path
     }
 
 #ifdef OS_WIN
-    const std::string dir_str = make_path(folder_str, dent->d_name);
-    tribool is_dir_tr = is_directory(dir_str);
-    if (is_dir_tr == INDETERMINATE) {
+    const std::string dir_str = common::file_system::make_path(path, dent->d_name);
+    common::tribool is_dir_tr = common::file_system::is_directory(dir_str);
+    if (is_dir_tr == common::INDETERMINATE) {
       continue;
     }
-    bool is_dir = is_dir_tr == SUCCESS;
+    bool is_dir = is_dir_tr == common::SUCCESS;
 #else
     bool is_dir = dent->d_type == DT_DIR;
 #endif
