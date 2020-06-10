@@ -29,6 +29,14 @@
 #define VAAPI_I965_DRIVER_PATH "/usr/local/lib/dri/"
 
 namespace {
+#if defined(OS_WIN)
+int setenv(const char *name, const char *value, int overwrite) {
+  UNUSED(overwrite);
+  const std::string line = std::string(name) + "=" + value;
+  return putenv(line.c_str());
+}
+#endif
+
 void RedirectGstLog(GstDebugCategory* category,
                     GstDebugLevel level,
                     const gchar* file,
@@ -138,7 +146,7 @@ bool GstInitializer::SetPluginAsPrimary(const std::string& plugin_name, int prio
   return false;
 }
 
-void Deinit() {
+void GstInitializer::Deinit() {
   gst_deinit();
 }
 
