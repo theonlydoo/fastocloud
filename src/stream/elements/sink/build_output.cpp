@@ -54,7 +54,12 @@ Element* build_output(const OutputUri& output, element_id_t sink_id, bool is_vod
     ElementHLSSink* http_sink = elements::sink::make_http_sink(sink_id, hout);
     return http_sink;
   } else if (uri.SchemeIsSrt()) {
-    ElementSrtSink* srt_sink = elements::sink::make_srt_sink(uri.spec(), sink_id);
+    int srt_mode = OutputUri::CALLER;
+    auto mode = output.GetSrtMode();
+    if (mode) {
+      srt_mode = *mode;
+    }
+    ElementSrtSink* srt_sink = elements::sink::make_srt_sink(uri.spec(), srt_mode, sink_id);
     return srt_sink;
   }
 

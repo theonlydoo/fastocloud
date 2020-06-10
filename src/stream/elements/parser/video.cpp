@@ -42,7 +42,8 @@ ElementTsParse* make_ts_parser(element_id_t parser_id) {
 }
 
 ElementH264Parse* make_h264_parser(element_id_t parser_id) {
-  return make_video_parser<ElementH264Parse>(parser_id);
+  ElementH264Parse* parser = make_video_parser<ElementH264Parse>(parser_id);
+  return parser;
 }
 
 ElementH265Parse* make_h265_parser(element_id_t parser_id) {
@@ -51,7 +52,8 @@ ElementH265Parse* make_h265_parser(element_id_t parser_id) {
 
 Element* make_video_parser(const std::string& parser, const std::string& name) {
   if (parser == ElementH264Parse::GetPluginName()) {
-    return new ElementH264Parse(name);
+    ElementH264Parse* parser = new ElementH264Parse(name);
+    return parser;
   } else if (parser == ElementH265Parse::GetPluginName()) {
     return new ElementH265Parse(name);
   } else if (parser == ElementMpegParse::GetPluginName()) {

@@ -336,7 +336,7 @@ void ProcessSlaveWrapper::TimerEmited(common::libev::IoLoop* server, common::lib
         fastotv::timestamp_t cod_last_update = cod->GetLastUpdate();
         fastotv::timestamp_t ts_diff = current_time - cod_last_update;
         if (ts_diff > config_.cods_ttl * 1000) {
-          cod->Stop();
+          ignore_result(cod->Stop());
         }
       }
     }

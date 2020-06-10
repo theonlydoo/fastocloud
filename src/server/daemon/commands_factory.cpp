@@ -105,9 +105,9 @@ common::Error GetLogServiceResponseFail(fastotv::protocol::sequance_id_t id,
   return common::Error();
 }
 
-common::Error ActivateResponse(fastotv::protocol::sequance_id_t id,
-                               const std::string& result,
-                               fastotv::protocol::response_t* resp) {
+common::Error ActivateResponseSuccess(fastotv::protocol::sequance_id_t id,
+                                      const std::string& result,
+                                      fastotv::protocol::response_t* resp) {
   if (!resp) {
     return common::make_error_inval();
   }
@@ -141,7 +141,7 @@ common::Error PrepareServiceResponse(fastotv::protocol::sequance_id_t id,
   return common::Error();
 }
 
-common::Error SyncServiceResponceSuccess(fastotv::protocol::sequance_id_t id, fastotv::protocol::response_t* resp) {
+common::Error SyncServiceResponseSuccess(fastotv::protocol::sequance_id_t id, fastotv::protocol::response_t* resp) {
   if (!resp) {
     return common::make_error_inval();
   }
@@ -263,7 +263,7 @@ common::Error GetPipeStreamResponseFail(fastotv::protocol::sequance_id_t id,
   return common::Error();
 }
 
-common::Error PingServiceResponce(fastotv::protocol::sequance_id_t id,
+common::Error PingServiceResponse(fastotv::protocol::sequance_id_t id,
                                   const common::daemon::commands::ServerPingInfo& ping,
                                   fastotv::protocol::response_t* resp) {
   if (!resp) {
@@ -281,7 +281,7 @@ common::Error PingServiceResponce(fastotv::protocol::sequance_id_t id,
   return common::Error();
 }
 
-common::Error PingServiceResponceFail(fastotv::protocol::sequance_id_t id,
+common::Error PingServiceResponseFail(fastotv::protocol::sequance_id_t id,
                                       const std::string& error_text,
                                       fastotv::protocol::response_t* resp) {
   if (!resp) {

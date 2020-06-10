@@ -106,6 +106,7 @@ Connector EncodingStreamBuilder::BuildConverter(Connector conn) {
       conn.video = video_encoder.back();
     }
 
+#if 0
     const std::string vcodec = config->GetVideoEncoder();
     if (elements::encoders::IsH264Encoder(vcodec)) {
       elements::parser::ElementH264Parse* premux_parser = elements::parser::make_h264_parser(0);
@@ -113,6 +114,7 @@ Connector EncodingStreamBuilder::BuildConverter(Connector conn) {
       ElementLink(conn.video, premux_parser);
       conn.video = premux_parser;
     }
+#endif
 
     elements::ElementTee* tee = new elements::ElementTee(common::MemSPrintf(VIDEO_TEE_NAME_1U, 0));
     ElementAdd(tee);

@@ -39,9 +39,10 @@ class ElementSrtSink : public ElementBaseSink<ELEMENT_SRT_SINK> {
   using base_class::base_class;
 
   void SetUri(const std::string& uri = "srt://127.0.0.1:7001");  // String. Default: "srt://127.0.0.1:7001"
+  void SetMode(int mode = 1);
 };
 
-ElementSrtSink* make_srt_sink(const std::string& uri, element_id_t sink_id);
+ElementSrtSink* make_srt_sink(const std::string& uri, int mode, element_id_t sink_id);
 
 }  // namespace sink
 }  // namespace elements

@@ -46,9 +46,9 @@ common::Error GetLogServiceResponseFail(fastotv::protocol::sequance_id_t id,
                                         const std::string& error_text,
                                         fastotv::protocol::response_t* resp);
 
-common::Error ActivateResponse(fastotv::protocol::sequance_id_t id,
-                               const std::string& result,
-                               fastotv::protocol::response_t* resp);
+common::Error ActivateResponseSuccess(fastotv::protocol::sequance_id_t id,
+                                      const std::string& result,
+                                      fastotv::protocol::response_t* resp);
 common::Error ActivateResponseFail(fastotv::protocol::sequance_id_t id,
                                    const std::string& error_text,
                                    fastotv::protocol::response_t* resp);
@@ -57,12 +57,12 @@ common::Error PrepareServiceResponse(fastotv::protocol::sequance_id_t id,
                                      const std::string& result,
                                      fastotv::protocol::response_t* resp);  // Directories
 
-common::Error SyncServiceResponceSuccess(fastotv::protocol::sequance_id_t id, fastotv::protocol::response_t* resp);
+common::Error SyncServiceResponseSuccess(fastotv::protocol::sequance_id_t id, fastotv::protocol::response_t* resp);
 
-common::Error PingServiceResponce(fastotv::protocol::sequance_id_t id,
+common::Error PingServiceResponse(fastotv::protocol::sequance_id_t id,
                                   const common::daemon::commands::ServerPingInfo& ping,
                                   fastotv::protocol::response_t* resp);
-common::Error PingServiceResponceFail(fastotv::protocol::sequance_id_t id,
+common::Error PingServiceResponseFail(fastotv::protocol::sequance_id_t id,
                                       const std::string& error_text,
                                       fastotv::protocol::response_t* resp);
 

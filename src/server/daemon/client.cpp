@@ -79,7 +79,7 @@ common::ErrnoError ProtocoledDaemonClient::Pong(fastotv::protocol::sequance_id_t
 common::ErrnoError ProtocoledDaemonClient::Pong(fastotv::protocol::sequance_id_t id,
                                                 const common::daemon::commands::ServerPingInfo& pong) {
   fastotv::protocol::response_t resp;
-  common::Error err_ser = PingServiceResponce(id, pong, &resp);
+  common::Error err_ser = PingServiceResponse(id, pong, &resp);
   if (err_ser) {
     return common::make_errno_error(err_ser->GetDescription(), EAGAIN);
   }
@@ -100,7 +100,7 @@ common::ErrnoError ProtocoledDaemonClient::ActivateFail(fastotv::protocol::sequa
 common::ErrnoError ProtocoledDaemonClient::ActivateSuccess(fastotv::protocol::sequance_id_t id,
                                                            const std::string& result) {
   fastotv::protocol::response_t resp;
-  common::Error err_ser = ActivateResponse(id, result, &resp);
+  common::Error err_ser = ActivateResponseSuccess(id, result, &resp);
   if (err_ser) {
     return common::make_errno_error(err_ser->GetDescription(), EAGAIN);
   }
@@ -247,7 +247,7 @@ common::ErrnoError ProtocoledDaemonClient::StopStreamSuccess(fastotv::protocol::
 
 common::ErrnoError ProtocoledDaemonClient::SyncServiceSuccess(fastotv::protocol::sequance_id_t id) {
   fastotv::protocol::response_t resp;
-  common::Error err_ser = SyncServiceResponceSuccess(id, &resp);
+  common::Error err_ser = SyncServiceResponseSuccess(id, &resp);
   if (err_ser) {
     return common::make_errno_error(err_ser->GetDescription(), EAGAIN);
   }

@@ -324,12 +324,14 @@ void MosaicStreamBuilder::BuildOutput(elements::Element* video, elements::Elemen
         next = rtp_pay;
       }
 
+#if 0
       if (elements::encoders::IsH264Encoder(vcodec)) {
         elements::parser::ElementH264Parse* premux_parser = elements::parser::make_h264_parser(i);
         ElementAdd(premux_parser);
         ElementLink(next, premux_parser);
         next = premux_parser;
       }
+#endif
 
       ElementLink(next, mux);
     }

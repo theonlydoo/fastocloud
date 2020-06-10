@@ -25,8 +25,13 @@ void ElementSrtSink::SetUri(const std::string& uri) {
   SetProperty("uri", uri);
 }
 
-ElementSrtSink* make_srt_sink(const std::string& uri, element_id_t sink_id) {
+void ElementSrtSink::SetMode(int mode) {
+  SetProperty("mode", mode);
+}
+
+ElementSrtSink* make_srt_sink(const std::string& uri, int mode, element_id_t sink_id) {
   ElementSrtSink* sink = make_sink<ElementSrtSink>(sink_id);
+  sink->SetMode(mode);
   sink->SetUri(uri);
   return sink;
 }
