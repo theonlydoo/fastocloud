@@ -129,6 +129,7 @@ Connector EncodingStreamBuilder::BuildConverter(Connector conn) {
       conn.audio = audio_encoder_line.back();
     }
 
+#if 0
     const std::string acodec = config->GetAudioEncoder();
     if (elements::encoders::IsAACEncoder(acodec)) {
       elements::parser::ElementAACParse* premux_parser = elements::parser::make_aac_parser(0);
@@ -136,6 +137,7 @@ Connector EncodingStreamBuilder::BuildConverter(Connector conn) {
       ElementLink(conn.audio, premux_parser);
       conn.audio = premux_parser;
     }
+#endif
 
     elements::ElementTee* tee = new elements::ElementTee(common::MemSPrintf(AUDIO_TEE_NAME_1U, 0));
     ElementAdd(tee);

@@ -16,12 +16,19 @@
 
 #include <string>
 
-#include "base/gst_constants.h"  // for AAC_PARSE, AC3_PARSE, MPEG_AUDIO_PARSE
+#include <common/sprintf.h>
 
 namespace fastocloud {
 namespace stream {
 namespace elements {
 namespace parser {
+
+namespace {
+template <typename T>
+T* make_audio_parser(element_id_t parser_id) {
+  return make_element<T>(common::MemSPrintf(AUDIO_PARSER_NAME_1U, parser_id));
+}
+}  // namespace
 
 ElementAACParse* make_aac_parser(element_id_t parser_id) {
   return make_audio_parser<ElementAACParse>(parser_id);

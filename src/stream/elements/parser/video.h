@@ -16,8 +16,6 @@
 
 #include <string>
 
-#include <common/sprintf.h>
-
 #include "stream/stypes.h"
 
 #include "stream/elements/parser/parser.h"
@@ -41,7 +39,7 @@ class ElementH265Parse : public ElementBaseParse<ELEMENT_H265_PARSE> {
   typedef ElementBaseParse<ELEMENT_H265_PARSE> base_class;
   using base_class::base_class;
 
-  void SetConfigInterval(gint interval = 0);  // Range: 0 - 3600 Default: 0
+  void SetConfigInterval(gint interval = 0);  // Range: -1 - 3600 Default: 0
 };
 
 class ElementMpegParse : public ElementBaseParse<ELEMENT_MPEG_VIDEO_PARSE> {
@@ -55,11 +53,6 @@ class ElementTsParse : public ElementBaseParse<ELEMENT_TS_PARSE> {
   typedef ElementBaseParse<ELEMENT_TS_PARSE> base_class;
   using base_class::base_class;
 };
-
-template <typename T>
-T* make_video_parser(element_id_t parser_id) {
-  return make_element<T>(common::MemSPrintf(VIDEO_PARSER_NAME_1U, parser_id));
-}
 
 ElementMpegParse* make_mpeg2_parser(element_id_t parser_id);
 ElementTsParse* make_ts_parser(element_id_t parser_id);

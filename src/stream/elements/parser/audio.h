@@ -16,8 +16,6 @@
 
 #include <string>
 
-#include <common/sprintf.h>
-
 #include "stream/stypes.h"
 
 #include "stream/elements/parser/parser.h"
@@ -50,11 +48,6 @@ class ElementRawAudioParse : public ElementBaseParse<ELEMENT_RAW_AUDIO_PARSE> {
   typedef ElementBaseParse<ELEMENT_RAW_AUDIO_PARSE> base_class;
   using base_class::base_class;
 };
-
-template <typename T>
-T* make_audio_parser(element_id_t parser_id) {
-  return make_element<T>(common::MemSPrintf(AUDIO_PARSER_NAME_1U, parser_id));
-}
 
 ElementAACParse* make_aac_parser(element_id_t parser_id);
 ElementAC3Parse* make_ac3_parser(element_id_t parser_id);

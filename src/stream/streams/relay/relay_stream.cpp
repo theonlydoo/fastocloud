@@ -18,6 +18,8 @@
 
 #include <string>
 
+#include <common/sprintf.h>
+
 #include "base/constants.h"
 #include "base/gst_constants.h"
 
