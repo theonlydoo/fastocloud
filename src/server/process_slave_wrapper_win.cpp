@@ -106,7 +106,10 @@ common::ErrnoError ProcessSlaveWrapper::CreateChildStreamImpl(const serialized_s
 
   tcp::Client* sock_client = new tcp::Client(loop_, common::net::socket_info(parent_sock));
   sock_client->SetName(sid);
-  loop_->RegisterClient(sock_client);
+  bool registered = loop_->RegisterClient(sock_client);
+  if (!registered) {
+    return common::make_errno_error("Can't register communication pipe", EAGAIN);
+  }
   ChildStream* child = new ChildStream(loop_, sha);
   child->SetClient(sock_client);
   loop_->RegisterChild(child, pi.hProcess);
