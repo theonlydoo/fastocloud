@@ -96,14 +96,15 @@ void HttpHandler::ProcessReceived(HttpClient* hclient, const char* request, size
   static const common::libev::http::HttpServerInfo hinf(PROJECT_NAME_TITLE, PROJECT_DOMAIN);
   common::http::HttpRequest hrequest;
   std::string request_str(request, req_len);
-  std::pair<common::http::http_status, common::Error> result = common::http::parse_http_request(request_str, &hrequest);
   DEBUG_LOG() << "Http request:\n" << request;
 
+  std::pair<common::http::http_status, common::Error> result = common::http::parse_http_request(request_str, &hrequest);
+  common::http::headers_t extra_headers = {{"Access-Control-Allow-Origin", "*"}};
   if (result.second) {
     const std::string error_text = result.second->GetDescription();
     DEBUG_MSG_ERROR(result.second, common::logging::LOG_LEVEL_ERR);
     common::ErrnoError err =
-        hclient->SendError(common::http::HP_1_1, result.first, nullptr, error_text.c_str(), false, hinf);
+        hclient->SendError(common::http::HP_1_1, result.first, extra_headers, error_text.c_str(), false, hinf);
     if (err) {
       DEBUG_MSG_ERROR(err, common::logging::LOG_LEVEL_ERR);
     }
@@ -117,13 +118,12 @@ void HttpHandler::ProcessReceived(HttpClient* hclient, const char* request, size
   bool is_find_connection = hrequest.FindHeaderByKey("Connection", false, &connection_field);
   bool IsKeepAlive = is_find_connection ? common::EqualsASCII(connection_field.value, "Keep-Alive", false) : false;
   const common::http::http_protocol protocol = hrequest.GetProtocol();
-  const char* extra_header = "Access-Control-Allow-Origin: *";
   if (hrequest.GetMethod() == common::http::http_method::HM_GET ||
       hrequest.GetMethod() == common::http::http_method::HM_HEAD) {
     auto url = hrequest.GetURL();
     if (!url.is_valid()) {  // for hls
       common::ErrnoError err =
-          hclient->SendError(protocol, common::http::HS_NOT_FOUND, extra_header, "File not found.", IsKeepAlive, hinf);
+          hclient->SendError(protocol, common::http::HS_NOT_FOUND, extra_headers, "File not found.", IsKeepAlive, hinf);
       if (err) {
         DEBUG_MSG_ERROR(err, common::logging::LOG_LEVEL_ERR);
       }
@@ -134,7 +134,7 @@ void HttpHandler::ProcessReceived(HttpClient* hclient, const char* request, size
     auto file_path = http_root_.MakeConcatFileStringPath(path_abs.substr(1));
     if (!file_path) {
       common::ErrnoError err =
-          hclient->SendError(protocol, common::http::HS_NOT_FOUND, extra_header, "File not found.", IsKeepAlive, hinf);
+          hclient->SendError(protocol, common::http::HS_NOT_FOUND, extra_headers, "File not found.", IsKeepAlive, hinf);
       if (err) {
         DEBUG_MSG_ERROR(err, common::logging::LOG_LEVEL_ERR);
       }
@@ -151,7 +151,7 @@ void HttpHandler::ProcessReceived(HttpClient* hclient, const char* request, size
     struct stat sb;
     if (stat(file_path_str.c_str(), &sb) < 0) {
       common::ErrnoError err =
-          hclient->SendError(protocol, common::http::HS_NOT_FOUND, extra_header, "File not found.", IsKeepAlive, hinf);
+          hclient->SendError(protocol, common::http::HS_NOT_FOUND, extra_headers, "File not found.", IsKeepAlive, hinf);
       if (err) {
         DEBUG_MSG_ERROR(err, common::logging::LOG_LEVEL_ERR);
       }
@@ -160,7 +160,7 @@ void HttpHandler::ProcessReceived(HttpClient* hclient, const char* request, size
 
     if (S_ISDIR(sb.st_mode)) {
       common::ErrnoError err =
-          hclient->SendError(protocol, common::http::HS_BAD_REQUEST, extra_header, "Bad filename.", IsKeepAlive, hinf);
+          hclient->SendError(protocol, common::http::HS_BAD_REQUEST, extra_headers, "Bad filename.", IsKeepAlive, hinf);
       if (err) {
         DEBUG_MSG_ERROR(err, common::logging::LOG_LEVEL_ERR);
       }
@@ -169,7 +169,7 @@ void HttpHandler::ProcessReceived(HttpClient* hclient, const char* request, size
 
     int file = open(file_path_str.c_str(), open_flags);
     if (file == INVALID_DESCRIPTOR) { /* open the file for reading */
-      common::ErrnoError err = hclient->SendError(protocol, common::http::HS_FORBIDDEN, extra_header,
+      common::ErrnoError err = hclient->SendError(protocol, common::http::HS_FORBIDDEN, extra_headers,
                                                   "File is protected.", IsKeepAlive, hinf);
       if (err) {
         DEBUG_MSG_ERROR(err, common::logging::LOG_LEVEL_ERR);
@@ -179,7 +179,7 @@ void HttpHandler::ProcessReceived(HttpClient* hclient, const char* request, size
 
     const std::string fileName = url.ExtractFileName();
     const char* mime = common::http::MimeTypes::GetType(fileName.c_str());
-    common::ErrnoError err = hclient->SendHeaders(protocol, common::http::HS_OK, extra_header, mime, &sb.st_size,
+    common::ErrnoError err = hclient->SendHeaders(protocol, common::http::HS_OK, extra_headers, mime, &sb.st_size,
                                                   &sb.st_mtime, IsKeepAlive, hinf);
     if (err) {
       DEBUG_MSG_ERROR(err, common::logging::LOG_LEVEL_ERR);

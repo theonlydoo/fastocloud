@@ -15,6 +15,7 @@
 #pragma once
 
 #include <common/libev/io_loop.h>
+#include <common/net/socket_info.h>
 
 #include <fastotv/protocol/protocol.h>
 #include <fastotv/protocol/types.h>
@@ -42,12 +43,14 @@ class StreamServer : public common::libev::IoLoop {
   void SendChangeSourcesBroadcast(const ChangedSouresInfo& change) WARN_UNUSED_RESULT;
   void SendStatisticBroadcast(const StatisticInfo& statistic) WARN_UNUSED_RESULT;
 
+  bool IsCanBeRegistered(common::libev::IoClient* client) const override WARN_UNUSED_RESULT;
+
 #if defined(MACHINE_LEARNING)
   void SendMlNotificationBroadcast(const fastotv::commands_info::ml::NotificationInfo& notification) WARN_UNUSED_RESULT;
 #endif
 
   common::libev::IoChild* CreateChild() override;
-  common::libev::IoClient* CreateClient(const common::net::socket_info& info) override;
+  common::libev::IoClient* CreateClient(const common::net::socket_info& info);
   void Started(common::libev::LibEvLoop* loop) override;
   void Stopped(common::libev::LibEvLoop* loop) override;
 

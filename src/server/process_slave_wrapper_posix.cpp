@@ -142,7 +142,7 @@ common::ErrnoError ProcessSlaveWrapper::CreateChildStreamImpl(const serialized_s
 
     client->SetName(sid);
     int res = stream_exec_func(new_name, config_args.get(), client);
-    client->Close();
+    ignore_result(client->Close());
     delete client;
     dlclose(handle);
     _exit(res);
@@ -169,7 +169,10 @@ common::ErrnoError ProcessSlaveWrapper::CreateChildStreamImpl(const serialized_s
     tcp::Client* client = new tcp::Client(loop_, common::net::socket_info(parent_sock));
 #endif
     client->SetName(sid);
-    loop_->RegisterClient(client);
+    bool registered = loop_->RegisterClient(client);
+    if (!registered) {
+      return common::make_errno_error("Can't register communication pipe", EAGAIN);
+    }
     ChildStream* new_channel = new ChildStream(loop_, sha);
     new_channel->SetClient(client);
     loop_->RegisterChild(new_channel, pid);

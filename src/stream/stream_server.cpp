@@ -27,7 +27,7 @@ StreamServer::StreamServer(fastotv::protocol::protocol_client_t* command_client,
 }
 
 void StreamServer::WriteRequest(const fastotv::protocol::request_t& request) {
-  auto cb = [this, request] { command_client_->WriteRequest(request); };
+  auto cb = [this, request] { ignore_result(command_client_->WriteRequest(request)); };
   ExecInLoopThread(cb);
 }
 
@@ -55,6 +55,10 @@ void StreamServer::SendStatisticBroadcast(const StatisticInfo& statistic) {
   WriteRequest(req);
 }
 
+bool StreamServer::IsCanBeRegistered(common::libev::IoClient* client) const {
+  return client == command_client_;
+}
+
 #if defined(MACHINE_LEARNING)
 void StreamServer::SendMlNotificationBroadcast(const fastotv::commands_info::ml::NotificationInfo& notification) {
   fastotv::protocol::request_t req;
@@ -79,7 +83,7 @@ common::libev::IoClient* StreamServer::CreateClient(const common::net::socket_in
 }
 
 void StreamServer::Started(common::libev::LibEvLoop* loop) {
-  RegisterClient(command_client_);
+  CHECK(RegisterClient(command_client_)) << "Must be for communication!";
   base_class::Started(loop);
 }
 

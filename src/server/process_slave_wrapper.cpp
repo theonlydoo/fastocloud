@@ -600,7 +600,12 @@ void ProcessSlaveWrapper::OnHttpRequest(common::libev::http::HttpClient* client,
         return;
       }
 
-      loop_->ExecInLoopThread([this, config]() { CreateChildStream(config); });
+      loop_->ExecInLoopThread([this, config]() {
+        common::ErrnoError errn = CreateChildStream(config);
+        if (errn) {
+          DEBUG_MSG_ERROR(errn, common::logging::LOG_LEVEL_WARNING);
+        }
+      });
       if (recommend_status) {
         *recommend_status = common::http::HS_ACCEPTED;
       }
@@ -622,7 +627,10 @@ void ProcessSlaveWrapper::OnHttpRequest(common::libev::http::HttpClient* client,
 
       loop_->ExecInLoopThread([this, is_m3u8, config]() {
         if (is_m3u8) {
-          CreateChildStream(config);
+          common::ErrnoError errn = CreateChildStream(config);
+          if (errn) {
+            DEBUG_MSG_ERROR(errn, common::logging::LOG_LEVEL_WARNING);
+          }
         }
 
         fastotv::stream_id_t sid = GetSid(config);
@@ -723,7 +731,6 @@ common::ErrnoError ProcessSlaveWrapper::CreateChildStream(const serialized_strea
 
   Child* stream = FindChildByID(sha.id);
   if (stream) {
-    NOTICE_LOG() << "Skip request to start stream id: " << sha.id;
     return common::make_errno_error(common::MemSPrintf("Stream with id: %s exist, skip request.", sha.id), EEXIST);
   }
 
@@ -869,10 +876,11 @@ common::ErrnoError ProcessSlaveWrapper::HandleRequestClientStartStream(Protocole
       return common::make_errno_error(err_str, EAGAIN);
     }
 
-    common::ErrnoError err = CreateChildStream(start_info.GetConfig());
-    if (err) {
-      ignore_result(dclient->StartStreamFail(req->id, common::make_error_from_errno(err)));
-      return err;
+    common::ErrnoError errn = CreateChildStream(start_info.GetConfig());
+    if (errn) {
+      DEBUG_MSG_ERROR(errn, common::logging::LOG_LEVEL_WARNING);
+      ignore_result(dclient->StartStreamFail(req->id, common::make_error_from_errno(errn)));
+      return errn;
     }
 
     return dclient->StartStreamSuccess(req->id);

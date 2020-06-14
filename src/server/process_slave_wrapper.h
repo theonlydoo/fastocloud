@@ -96,8 +96,9 @@ class ProcessSlaveWrapper : public common::libev::IoLoopObserver, public server:
   common::ErrnoError DaemonDataReceived(ProtocoledDaemonClient* dclient) WARN_UNUSED_RESULT;
   common::ErrnoError StreamDataReceived(stream_client_t* pclient) WARN_UNUSED_RESULT;
 
-  common::ErrnoError CreateChildStream(const serialized_stream_t& config_args);
-  common::ErrnoError CreateChildStreamImpl(const serialized_stream_t& config_args, const StreamInfo& sha);
+  common::ErrnoError CreateChildStream(const serialized_stream_t& config_args) WARN_UNUSED_RESULT;
+  common::ErrnoError CreateChildStreamImpl(const serialized_stream_t& config_args,
+                                           const StreamInfo& sha) WARN_UNUSED_RESULT;
   common::ErrnoError StopChildStream(const serialized_stream_t& config_args);
   common::ErrnoError StopChildStreamImpl(fastotv::stream_id_t sid);
 
