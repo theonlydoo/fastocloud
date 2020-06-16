@@ -29,7 +29,7 @@ namespace stream {
 namespace elements {
 namespace sink {
 
-Element* build_output(const OutputUri& output, element_id_t sink_id, bool is_vod) {
+Element* build_output(const OutputUri& output, element_id_t sink_id, bool is_vod, bool is_cod) {
   common::uri::GURL uri = output.GetOutput();
 
   if (uri.SchemeIsUdp()) {
@@ -51,7 +51,7 @@ Element* build_output(const OutputUri& output, element_id_t sink_id, bool is_vod
       NOTREACHED() << err->GetDescription();
       return nullptr;
     }
-    ElementHLSSink* http_sink = elements::sink::make_http_sink(sink_id, hout);
+    ElementHLSSink* http_sink = elements::sink::make_http_sink(sink_id, hout, is_cod);
     return http_sink;
   } else if (uri.SchemeIsSrt()) {
     int srt_mode = OutputUri::CALLER;

@@ -27,7 +27,7 @@ class Element;
 
 namespace sink {
 
-Element* build_output(const OutputUri& output, element_id_t sink_id, bool is_vod);
+Element* build_output(const OutputUri& output, element_id_t sink_id, bool is_vod, bool is_cod);
 
 }  // namespace sink
 }  // namespace elements

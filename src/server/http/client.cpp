@@ -18,15 +18,7 @@ namespace fastocloud {
 namespace server {
 
 HttpClient::HttpClient(common::libev::IoLoop* server, const common::net::socket_info& info)
-    : base_class(server, info), is_verified_(false) {}
-
-bool HttpClient::IsVerified() const {
-  return is_verified_;
-}
-
-void HttpClient::SetVerified(bool verified) {
-  is_verified_ = verified;
-}
+    : base_class(server, info) {}
 
 const char* HttpClient::ClassName() const {
   return "HttpClient";

@@ -23,7 +23,8 @@
 
 #include "base/types.h"
 
-#define TS_DURATION 10
+#define HTTP_TS_DURATION 10
+#define CODS_TS_DURATION 5
 
 #define VIDEO_TEE_NAME_1U "video_tee_%lu"
 #define AUDIO_TEE_NAME_1U "audio_tee_%lu"

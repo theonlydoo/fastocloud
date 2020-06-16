@@ -18,15 +18,7 @@ namespace fastocloud {
 namespace server {
 
 VodsClient::VodsClient(common::libev::IoLoop* server, const common::net::socket_info& info)
-    : base_class(server, info), is_verified_(false) {}
-
-bool VodsClient::IsVerified() const {
-  return is_verified_;
-}
-
-void VodsClient::SetVerified(bool verified) {
-  is_verified_ = verified;
-}
+    : base_class(server, info) {}
 
 const char* VodsClient::ClassName() const {
   return "VodsClient";

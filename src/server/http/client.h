@@ -25,13 +25,7 @@ class HttpClient : public common::libev::http::HttpClient {
 
   HttpClient(common::libev::IoLoop* server, const common::net::socket_info& info);
 
-  bool IsVerified() const;
-  void SetVerified(bool verified);
-
   const char* ClassName() const override;
-
- private:
-  bool is_verified_;
 };
 
 }  // namespace server

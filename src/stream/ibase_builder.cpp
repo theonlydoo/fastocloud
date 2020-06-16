@@ -109,7 +109,8 @@ elements::Element* IBaseBuilder::BuildGenericOutput(const OutputUri& output, ele
 
 elements::Element* IBaseBuilder::CreateSink(const OutputUri& output, element_id_t sink_id) {
   IBaseStream* stream = static_cast<IBaseStream*>(GetObserver());
-  elements::Element* sink = elements::sink::build_output(output, sink_id, stream->IsVod());
+  bool is_cod = stream->GetType() == fastotv::COD_RELAY || stream->GetType() == fastotv::COD_ENCODE;
+  elements::Element* sink = elements::sink::build_output(output, sink_id, stream->IsVod(), is_cod);
   return sink;
 }
 

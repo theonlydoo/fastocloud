@@ -68,7 +68,7 @@ class ElementSoupHttpSink : public ElementEx<ELEMENT_SOUP_HTTP_CLIENT_SINK> {
 };
 
 ElementSoupHttpSink* make_http_soup_sink(element_id_t sink_id, const std::string& location);
-ElementHLSSink* make_http_sink(element_id_t sink_id, const HlsOutput& output);
+ElementHLSSink* make_http_sink(element_id_t sink_id, const HlsOutput& output, guint ts_duration);
 
 }  // namespace sink
 }  // namespace elements

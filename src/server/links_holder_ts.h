@@ -34,5 +34,6 @@ class LinksHolderTS {
   std::mutex mutex_;
   std::map<common::file_system::ascii_directory_string_path, StreamConfig> links_;
 };
+
 }  // namespace server
 }  // namespace fastocloud

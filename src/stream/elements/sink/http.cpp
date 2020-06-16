@@ -122,11 +122,11 @@ ElementSoupHttpSink* make_http_soup_sink(element_id_t sink_id, const std::string
   return hls_out;
 }
 
-ElementHLSSink* make_http_sink(element_id_t sink_id, const HlsOutput& output) {
+ElementHLSSink* make_http_sink(element_id_t sink_id, const HlsOutput& output, guint ts_duration) {
   ElementHLSSink* hls_out = make_sink<ElementHLSSink>(sink_id);
   hls_out->SetLocation(output.location);
   hls_out->SetPlayLocation(output.play_locataion);
-  hls_out->SetTargetDuration(TS_DURATION);
+  hls_out->SetTargetDuration(ts_duration);
   hls_out->SetPlaylistLenght(output.paylist_length);
   hls_out->SetMaxFiles(output.max_files);
   return hls_out;
