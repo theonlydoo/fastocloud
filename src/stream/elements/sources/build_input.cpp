@@ -16,6 +16,10 @@
 
 #include <string>
 
+#include <common/convert2string.h>
+#include <common/string_split.h>
+
+#include "stream/elements/sources/dvbsrc.h"
 #include "stream/elements/sources/filesrc.h"
 #include "stream/elements/sources/httpsrc.h"
 #include "stream/elements/sources/rtmpsrc.h"
@@ -74,6 +78,31 @@ Element* make_src(const InputUri& uri, element_id_t input_id, gint timeout_secs)
     return make_tcp_server_src(host, input_id);
   } else if (url.SchemeIsSrt()) {
     return make_srt_src(url.spec(), input_id);
+  } else if (url.SchemeIs("dvb")) {
+    // dvb://?modulation=3&trans-mode=1&frequency=514000000
+    auto src = make_dvb_src(input_id);
+    const auto spl = common::SplitString(url.query(), "&", common::TRIM_WHITESPACE, common::SPLIT_WANT_ALL);
+    for (const std::string& line : spl) {
+      size_t delem = line.find_first_of('=');
+      if (delem == std::string::npos) {
+        continue;
+      }
+
+      std::string key = line.substr(0, delem);
+      std::string value = line.substr(delem + 1);
+      gint lmodulation, ltrans;
+      guint lfrequency;
+      if (key == MODULATION_PROPERTY && common::ConvertFromString(value, &lmodulation)) {
+        src->SetModulation(lmodulation);
+      } else if (key == TRANS_MODE_PROPERTY && common::ConvertFromString(value, &ltrans)) {
+        src->SetTransMode(ltrans);
+      } else if (key == FREQUENCY_PROPERTY && common::ConvertFromString(value, &lfrequency)) {
+        src->SetFrequency(lfrequency);
+      } else if (key == POLARITY_PROPERTY) {
+        src->SetPolarity(value);
+      }
+    }
+    return src;
   }
 
   NOTREACHED() << "Unknown input url: " << url.spec();

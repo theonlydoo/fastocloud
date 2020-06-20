@@ -1124,8 +1124,8 @@ common::ErrnoError ProcessSlaveWrapper::HandleRequestClientSyncService(Protocole
     }
 
     // refresh vods
-    vods_links_.Clear();
-    cods_links_.Clear();
+    // vods_links_.Clear();
+    // cods_links_.Clear();
     for (StreamConfig config : sync_info.GetStreams()) {
       AddStreamLine(config);
     }

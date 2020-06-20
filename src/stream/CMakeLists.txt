@@ -190,6 +190,7 @@ SET(ELEMENTS_SOURCES_HEADERS
   ${CMAKE_SOURCE_DIR}/src/stream/elements/element.h
   ${CMAKE_SOURCE_DIR}/src/stream/elements/sources/multifilesrc.h
   ${CMAKE_SOURCE_DIR}/src/stream/elements/sources/httpsrc.h
+  ${CMAKE_SOURCE_DIR}/src/stream/elements/sources/dvbsrc.h
   ${CMAKE_SOURCE_DIR}/src/stream/elements/sources/appsrc.h
   ${CMAKE_SOURCE_DIR}/src/stream/elements/sources/rtmpsrc.h
   ${CMAKE_SOURCE_DIR}/src/stream/elements/sources/rtspsrc.h
@@ -206,6 +207,7 @@ SET(ELEMENTS_SOURCES_SOURCES
   ${CMAKE_SOURCE_DIR}/src/stream/elements/element.cpp
   ${CMAKE_SOURCE_DIR}/src/stream/elements/sources/multifilesrc.cpp
   ${CMAKE_SOURCE_DIR}/src/stream/elements/sources/httpsrc.cpp
+  ${CMAKE_SOURCE_DIR}/src/stream/elements/sources/dvbsrc.cpp
   ${CMAKE_SOURCE_DIR}/src/stream/elements/sources/appsrc.cpp
   ${CMAKE_SOURCE_DIR}/src/stream/elements/sources/rtmpsrc.cpp
   ${CMAKE_SOURCE_DIR}/src/stream/elements/sources/rtspsrc.cpp

@@ -72,6 +72,7 @@
 #define RTMP_SINK "rtmpsink"
 #define HLS_SINK "hlssink"
 #define SOUP_HTTP_SRC "souphttpsrc"
+#define DVB_SRC "dvbsrc"
 #define VIDEO_SCALE "videoscale"
 #define VIDEO_RATE "videorate"
 #define MULTIFILE_SINK "multifilesink"
