@@ -59,6 +59,7 @@ OPTION(DEVELOPER_CHECK_STYLE "Enable check style for ${PROJECT_NAME_TITLE} proje
 OPTION(DEVELOPER_GENERATE_DOCS "Generate docs api for ${PROJECT_NAME_TITLE} project" OFF)
 OPTION(BUILD_SERVER "Build server for ${PROJECT_NAME_TITLE} project" ON)
 OPTION(BUILD_STREAM "Build stream for ${PROJECT_NAME_TITLE} project" ON)
+OPTION(CPACK_SUPPORT "Enable package build" OFF)
 
 ##################################DEFAULT VALUES##########################################
 IF(NOT CMAKE_BUILD_TYPE)
