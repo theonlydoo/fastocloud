@@ -158,9 +158,9 @@ elements_line_t EncodingStreamBuilder::BuildVideoPostProc(element_id_t video_id)
     if (conf->IsMfxGpu()) {
       elements::ElementMFXVpp* post = new elements::ElementMFXVpp(common::MemSPrintf(POST_PROC_NAME_1U, video_id));
       post->SetForceAspectRatio(false);
-      if (size.IsValid()) {
-        post->SetWidth(size.width);
-        post->SetHeight(size.height);
+      if (size.IsEmpty()) {
+        post->SetWidth(size.width());
+        post->SetHeight(size.height());
       }
       if (framerate) {
         post->SetFrameRate(*framerate);
@@ -188,8 +188,8 @@ elements_line_t EncodingStreamBuilder::BuildVideoPostProc(element_id_t video_id)
     first = first_last.front();
     last = first_last.back();
 
-    if (size.IsValid()) {
-      last = elements::encoders::build_video_scale(size.width, size.height, this, last, video_id);
+    if (!size.IsEmpty()) {
+      last = elements::encoders::build_video_scale(size.width(), size.height(), this, last, video_id);
     }
 
     const auto aratio = conf->GetAspectRatio();
@@ -265,8 +265,8 @@ elements_line_t EncodingStreamBuilder::BuildVideoPostProc(element_id_t video_id)
     auto size = logo->GetSize();
     if (size) {
       common::draw::Size sz = *size;
-      videologo->SetOverlayHeight(sz.height);
-      videologo->SetOverlayWidth(sz.width);
+      videologo->SetOverlayHeight(sz.height());
+      videologo->SetOverlayWidth(sz.width());
     }
     ElementAdd(videologo);
     ElementLink(last, videologo);
@@ -289,8 +289,8 @@ elements_line_t EncodingStreamBuilder::BuildVideoPostProc(element_id_t video_id)
     auto size = rsvg_logo->GetSize();
     if (size) {
       common::draw::Size sz = *size;
-      rvideologo->SetHeight(sz.height);
-      rvideologo->SetWidth(sz.width);
+      rvideologo->SetHeight(sz.height());
+      rvideologo->SetWidth(sz.width());
     }
     ElementAdd(rvideologo);
     ElementLink(last, rvideologo);

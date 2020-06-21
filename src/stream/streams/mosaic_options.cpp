@@ -23,7 +23,7 @@ SoundInfo::SoundInfo() : channels() {}
 MosaicImageOptions::MosaicImageOptions() : screen_size(), right_padding(0), sreams() {}
 
 bool MosaicImageOptions::isValid() const {
-  return screen_size.width != 0 && screen_size.height != 0;
+  return !screen_size.IsEmpty();
 }
 
 }  // namespace streams

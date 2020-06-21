@@ -251,12 +251,10 @@ void EncodingStream::new_prediction_callback(GstElement* elem, gpointer meta, gp
   for (int i = 0; i < detection_meta->num_boxes; ++i) {
     BBox* box = (detection_meta->boxes) + i;
     fastotv::commands_info::ml::ImageBox image;
-    image.label = box->label;
-    image.prob = box->prob;
-    image.x = box->x;
-    image.y = box->y;
-    image.width = box->width;
-    image.height = box->height;
+    image.class_id = box->label;
+    image.confidence = box->prob;
+    image.start = common::draw::Point(box->x, box->y);
+    image.size = common::draw::Size(box->width, box->height);
     images.push_back(image);
   }
   EncodingStream* stream = reinterpret_cast<EncodingStream*>(user_data);

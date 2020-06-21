@@ -51,7 +51,7 @@ Element* build_mux_video_scale(common::draw::Size sz, ILinker* linker, Element* 
   linker->ElementAdd(capsfilter);
 
   GstCaps* cap_width_height =
-      gst_caps_new_simple("video/x-raw", "width", G_TYPE_INT, sz.width, "height", G_TYPE_INT, sz.height, nullptr);
+      gst_caps_new_simple("video/x-raw", "width", G_TYPE_INT, sz.width(), "height", G_TYPE_INT, sz.height(), nullptr);
   capsfilter->SetCaps(cap_width_height);
   gst_caps_unref(cap_width_height);
 
@@ -72,8 +72,8 @@ bool MosaicStreamBuilder::InitPipeline() {
   input_t prepared = config->GetInput();
   size_t sz = prepared.size();
   MosaicImageOptions options;
-  options.screen_size.width = 1280;
-  options.screen_size.height = 720;
+  options.screen_size.set_width(1280);
+  options.screen_size.set_height(720);
   options.right_padding = 100;
   size_t row_counts = 0;
   size_t column_counts = 0;
@@ -127,8 +127,8 @@ bool MosaicStreamBuilder::InitPipeline() {
         elements::ElementQueue* video_queue = new elements::ElementQueue(common::MemSPrintf(UDB_VIDEO_NAME_1U, i));
         ElementAdd(video_queue);
 
-        common::draw::Size image_size(options.screen_size.width / column_counts,
-                                      options.screen_size.height / row_counts);
+        common::draw::Size image_size(options.screen_size.width() / column_counts,
+                                      options.screen_size.height() / row_counts);
         image.size = image_size;
         elements::Element* scale = elements::build_mux_video_scale(image.size, this, video_queue, i);
 
@@ -141,7 +141,7 @@ bool MosaicStreamBuilder::InitPipeline() {
 
         const std::string pad_name = common::MemSPrintf("sink_%lu", i);
         pad::Pad* sink_pad = vmix->StaticPad(pad_name.c_str());
-        common::draw::Point p(c * image_size.width, r * image_size.height);
+        common::draw::Point p(c * image_size.width(), r * image_size.height());
         image.x_y = p;
         if (sink_pad->IsValid()) {
           sink_pad->SetProperty("xpos", p.x);
