@@ -34,6 +34,8 @@
 #define MPEG_AUDIO_PARSE "mpegaudioparse"
 #define RAW_AUDIO_PARSE "rawaudioparse"
 #define TEE "tee"
+#define MP4_MUX "mp4mux"
+#define QT_MUX "qtmux"
 #define FLV_MUX "flvmux"
 #define MPEGTS_MUX "mpegtsmux"
 #define FILE_SINK "filesink"

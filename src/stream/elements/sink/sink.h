@@ -31,12 +31,6 @@ namespace stream {
 namespace elements {
 namespace sink {
 
-class ElementFileSink : public ElementEx<ELEMENT_FILE_SINK> {
- public:
-  typedef ElementEx<ELEMENT_FILE_SINK> base_class;
-  using base_class::base_class;
-};
-
 class ElementMultiFileSink : public ElementEx<ELEMENT_MULTIFILE_SINK> {
  public:
   typedef ElementEx<ELEMENT_MULTIFILE_SINK> base_class;

@@ -18,6 +18,7 @@
 
 #include "base/output_uri.h"  // for OutputUri, IsFakeUrl
 
+#include "stream/elements/sink/file.h"
 #include "stream/elements/sink/http.h"  // for build_http_sink, HlsOutput
 #include "stream/elements/sink/rtmp.h"  // for build_rtmp_sink
 #include "stream/elements/sink/srt.h"
@@ -62,6 +63,9 @@ Element* build_output(const OutputUri& output, element_id_t sink_id, bool is_vod
     }
     ElementSrtSink* srt_sink = elements::sink::make_srt_sink(uri.spec(), srt_mode, sink_id);
     return srt_sink;
+  } else if (uri.SchemeIsFile()) {
+    ElementFileSink* file_sink = elements::sink::make_file_sink(uri.path(), sink_id);
+    return file_sink;
   }
 
   NOTREACHED() << "Unknown output url: " << uri.spec();
