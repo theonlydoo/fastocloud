@@ -31,12 +31,11 @@ class Client : public fastotv::protocol::protocol_client_t {
   const char* ClassName() const override;
 
  protected:
-  common::ErrnoError SingleWrite(const void* data, size_t size, size_t* nwrite_out) override;
-  common::ErrnoError SingleRead(void* out, size_t max_size, size_t* nread) override;
-
   descriptor_t GetFd() const override;
 
  private:
+  common::ErrnoError DoSingleWrite(const void* data, size_t size, size_t* nwrite_out) override;
+  common::ErrnoError DoSingleRead(void* out, size_t max_size, size_t* nread) override;
   common::ErrnoError DoClose() override;
 
   common::libev::tcp::TcpClient* client_;

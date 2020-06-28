@@ -25,11 +25,11 @@ const char* Client::ClassName() const {
   return "TcpClient";
 }
 
-common::ErrnoError Client::SingleWrite(const void* data, size_t size, size_t* nwrite_out) {
+common::ErrnoError Client::DoSingleWrite(const void* data, size_t size, size_t* nwrite_out) {
   return client_->SingleWrite(data, size, nwrite_out);
 }
 
-common::ErrnoError Client::SingleRead(void* out, size_t max_size, size_t* nread) {
+common::ErrnoError Client::DoSingleRead(void* out, size_t max_size, size_t* nread) {
   return client_->SingleRead(out, max_size, nread);
 }
 

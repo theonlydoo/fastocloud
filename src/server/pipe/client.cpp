@@ -24,11 +24,11 @@ Client::Client(common::libev::IoLoop* server, descriptor_t read_fd, descriptor_t
       pipe_write_client_(new common::libev::PipeWriteClient(nullptr, write_fd)),
       read_fd_(read_fd) {}
 
-common::ErrnoError Client::SingleWrite(const void* data, size_t size, size_t* nwrite_out) {
+common::ErrnoError Client::DoSingleWrite(const void* data, size_t size, size_t* nwrite_out) {
   return pipe_write_client_->SingleWrite(data, size, nwrite_out);
 }
 
-common::ErrnoError Client::SingleRead(void* out, size_t max_size, size_t* nread) {
+common::ErrnoError Client::DoSingleRead(void* out, size_t max_size, size_t* nread) {
   return pipe_read_client_->SingleRead(out, max_size, nread);
 }
 
