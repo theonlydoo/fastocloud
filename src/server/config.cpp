@@ -112,7 +112,7 @@ Config::Config()
       license_key() {}
 
 common::net::HostAndPort Config::GetDefaultHost() {
-  return common::net::HostAndPort::CreateLocalHost(CLIENT_PORT);
+  return common::net::HostAndPort::CreateLocalHostIPV4(CLIENT_PORT);
 }
 
 bool Config::IsValid() const {
@@ -160,28 +160,28 @@ common::ErrnoError load_config_from_file(const std::string& config_absolute_path
   common::Value* host_field = slave_config_args->Find(SERVICE_HOST_FIELD);
   std::string host_str;
   if (!host_field || !host_field->GetAsBasicString(&host_str) || !common::ConvertFromString(host_str, &lconfig.host)) {
-    lconfig.host = common::net::HostAndPort::CreateLocalHost(CLIENT_PORT);
+    lconfig.host = Config::GetDefaultHost();
   }
 
   common::Value* http_host_field = slave_config_args->Find(SERVICE_HTTP_HOST_FIELD);
   std::string http_host_str;
   if (!http_host_field || !http_host_field->GetAsBasicString(&http_host_str) ||
       !common::ConvertFromString(http_host_str, &lconfig.http_host)) {
-    lconfig.http_host = common::net::HostAndPort::CreateLocalHost(HTTP_PORT);
+    lconfig.http_host = common::net::HostAndPort::CreateLocalHostIPV4(HTTP_PORT);
   }
 
   common::Value* vods_host_field = slave_config_args->Find(SERVICE_VODS_HOST_FIELD);
   std::string vods_host_str;
   if (!vods_host_field || !vods_host_field->GetAsBasicString(&vods_host_str) ||
       !common::ConvertFromString(vods_host_str, &lconfig.vods_host)) {
-    lconfig.vods_host = common::net::HostAndPort::CreateLocalHost(VODS_PORT);
+    lconfig.vods_host = common::net::HostAndPort::CreateLocalHostIPV4(VODS_PORT);
   }
 
   common::Value* cods_host_field = slave_config_args->Find(SERVICE_CODS_HOST_FIELD);
   std::string cods_host_str;
   if (!cods_host_field || !cods_host_field->GetAsBasicString(&cods_host_str) ||
       !common::ConvertFromString(cods_host_str, &lconfig.cods_host)) {
-    lconfig.cods_host = common::net::HostAndPort::CreateLocalHost(CODS_PORT);
+    lconfig.cods_host = common::net::HostAndPort::CreateLocalHostIPV4(CODS_PORT);
   }
 
   common::Value* cods_ttl_field = slave_config_args->Find(SERVICE_CODS_TTL_FIELD);
