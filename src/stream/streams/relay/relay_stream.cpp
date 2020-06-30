@@ -58,6 +58,7 @@ gboolean RelayStream::HandleDecodeBinAutoplugger(GstElement* elem,
   std::string type_title;
   std::string type_full;
   if (!get_type_from_caps(caps, &type_title, &type_full)) {
+    WARNING_LOG() << "Can't parse caps";
     return TRUE;
   }
 

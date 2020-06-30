@@ -111,6 +111,17 @@ common::ErrnoError MakeStreamInfo(const StreamConfig& config_args,
           if (errn) {
             return errn;
           }
+        } else if (ouri.SchemeIsFile()) {
+          const auto file_path = common::file_system::ascii_file_string_path(ouri.path());
+          if (!file_path.IsValid()) {
+            return common::make_errno_error_inval();
+          }
+
+          const std::string file_root_str = file_path.GetDirectory();
+          common::ErrnoError errn = CreateAndCheckDir(file_root_str);
+          if (errn) {
+            return errn;
+          }
         }
         lsha.output.push_back(out_uri);
       }

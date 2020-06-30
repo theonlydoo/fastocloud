@@ -68,6 +68,7 @@ ElementSoupHTTPSrc* make_http_src(const std::string& location,
   ElementSoupHTTPSrc* http_src = make_sources<ElementSoupHTTPSrc>(input_id);
   http_src->SetLocation(location);
   http_src->SetTimeOut(timeout_secs);
+  http_src->SetIsLive(true);
   if (user_agent) {
     http_src->SetUserAgent(*user_agent);
   }

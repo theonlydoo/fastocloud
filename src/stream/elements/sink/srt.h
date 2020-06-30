@@ -20,8 +20,8 @@
 
 // for element_id_t
 
-#include "stream/elements/element.h"    // for SupportedElements::ELEMENT_UDP_SINK
-#include "stream/elements/sink/sink.h"  // for ElementBaseSink
+#include "stream/elements/element.h"
+#include "stream/elements/sink/sink.h"
 #include "stream/stypes.h"
 
 namespace common {

@@ -65,7 +65,6 @@ About FastoCloud
 * Detect objects in real-time video and send email/push notifications
 * Objects classification, open doors, time tracking, lock/unlock devices
 * Fire/Smoke detection with notifications
-* Livepeer mining crypto
 * CCTV Monitoring service
 * Screen recording
 * Personal branded video apps
