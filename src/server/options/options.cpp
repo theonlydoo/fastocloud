@@ -19,7 +19,7 @@
 #include <utility>
 #include <vector>
 
-#include <common/draw/types.h>
+#include <common/draw/size.h>
 #include <common/file_system/path.h>
 #include <common/media/types.h>
 

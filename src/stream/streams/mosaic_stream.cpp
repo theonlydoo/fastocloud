@@ -245,8 +245,8 @@ void MosaicStream::HandleCairoDraw(GstElement* overlay, cairo_t* cr, guint64 tim
 
     common::draw::Size sz = img.size;
     common::draw::Point xy = img.x_y;
-    int x0 = xy.x + sz.width() - right_padding;
-    int y0 = xy.y;
+    int x0 = xy.x() + sz.width() - right_padding;
+    int y0 = xy.y();
     int height_chuk = sz.height() / (COUNT_CHUNKS * 2);
     int x_padding = padding;
     int y_padding = height_chuk;

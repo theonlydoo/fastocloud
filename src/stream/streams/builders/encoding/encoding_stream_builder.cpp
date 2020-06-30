@@ -259,8 +259,8 @@ elements_line_t EncodingStreamBuilder::BuildVideoPostProc(element_id_t video_id)
     } else {
       NOTREACHED();
     }
-    videologo->SetOffsetX(logo_point.x);
-    videologo->SetOffsetY(logo_point.y);
+    videologo->SetOffsetX(logo_point.x());
+    videologo->SetOffsetY(logo_point.y());
     videologo->SetAlpha(alpha);
     auto size = logo->GetSize();
     if (size) {
@@ -284,8 +284,8 @@ elements_line_t EncodingStreamBuilder::BuildVideoPostProc(element_id_t video_id)
     } else {
       NOTREACHED();
     }
-    rvideologo->SetX(logo_point.x);
-    rvideologo->SetY(logo_point.y);
+    rvideologo->SetX(logo_point.x());
+    rvideologo->SetY(logo_point.y());
     auto size = rsvg_logo->GetSize();
     if (size) {
       common::draw::Size sz = *size;

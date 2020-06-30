@@ -16,7 +16,6 @@
 
 #include <string>
 
-#include <common/draw/types.h>
 #if defined(MACHINE_LEARNING)
 #include "base/machine_learning/deep_learning.h"
 #include "base/machine_learning/deep_learning_overlay.h"

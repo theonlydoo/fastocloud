@@ -144,8 +144,8 @@ bool MosaicStreamBuilder::InitPipeline() {
         common::draw::Point p(c * image_size.width(), r * image_size.height());
         image.x_y = p;
         if (sink_pad->IsValid()) {
-          sink_pad->SetProperty("xpos", p.x);
-          sink_pad->SetProperty("ypos", p.y);
+          sink_pad->SetProperty("xpos", p.x());
+          sink_pad->SetProperty("ypos", p.y());
         }
         delete sink_pad;
       }

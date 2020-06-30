@@ -16,7 +16,6 @@
 
 #include <string>
 
-#include <common/draw/types.h>
 #include <common/sprintf.h>
 
 #include "stream/gst_types.h"
