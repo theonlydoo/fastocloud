@@ -193,7 +193,7 @@ Directories::Directories(const PrepareInfo& sinf)
       hls_dir(sinf.GetHlsDirectory(), PREPARE_SERVICE_INFO_HLS_DIRECTORY_FIELD),
       vods_dir(sinf.GetVodsDirectory(), PREPARE_SERVICE_INFO_VODS_DIRECTORY_FIELD),
       cods_dir(sinf.GetCodsDirectory(), PREPARE_SERVICE_INFO_CODS_DIRECTORY_FIELD),
-      proxy_dir(sinf.GetCodsDirectory(), PREPARE_SERVICE_INFO_CODS_DIRECTORY_FIELD) {}
+      proxy_dir(sinf.GetProxyDirectory(), PREPARE_SERVICE_INFO_PROXY_DIRECTORY_FIELD) {}
 
 std::string MakeDirectoryResponce(const Directories& dirs) {
   json_object* obj = json_object_new_array();
