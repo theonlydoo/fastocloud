@@ -29,6 +29,7 @@
 #define PREPARE_SERVICE_INFO_HLS_DIRECTORY_FIELD "hls_directory"
 #define PREPARE_SERVICE_INFO_VODS_DIRECTORY_FIELD "vods_directory"
 #define PREPARE_SERVICE_INFO_CODS_DIRECTORY_FIELD "cods_directory"
+#define PREPARE_SERVICE_INFO_PROXY_DIRECTORY_FIELD "proxy_directory"
 
 #define SAVE_DIRECTORY_FIELD_PATH "path"
 #define SAVE_DIRECTORY_FIELD_CONTENT "content"
@@ -72,7 +73,8 @@ PrepareInfo::PrepareInfo()
       timeshifts_directory_(),
       hls_directory_(),
       vods_directory_(),
-      cods_directory_() {}
+      cods_directory_(),
+      proxy_directory_() {}
 
 std::string PrepareInfo::GetFeedbackDirectory() const {
   return feedback_directory_;
@@ -94,6 +96,10 @@ std::string PrepareInfo::GetCodsDirectory() const {
   return cods_directory_;
 }
 
+std::string PrepareInfo::GetProxyDirectory() const {
+  return proxy_directory_;
+}
+
 common::Error PrepareInfo::SerializeFields(json_object* out) const {
   json_object_object_add(out, PREPARE_SERVICE_INFO_FEEDBACK_DIRECTORY_FIELD,
                          json_object_new_string(feedback_directory_.c_str()));
@@ -104,6 +110,8 @@ common::Error PrepareInfo::SerializeFields(json_object* out) const {
                          json_object_new_string(vods_directory_.c_str()));
   json_object_object_add(out, PREPARE_SERVICE_INFO_CODS_DIRECTORY_FIELD,
                          json_object_new_string(cods_directory_.c_str()));
+  json_object_object_add(out, PREPARE_SERVICE_INFO_PROXY_DIRECTORY_FIELD,
+                         json_object_new_string(proxy_directory_.c_str()));
   return common::Error();
 }
 
@@ -144,6 +152,13 @@ common::Error PrepareInfo::DoDeSerialize(json_object* serialized) {
     inf.cods_directory_ = json_object_get_string(jcods_directory);
   }
 
+  json_object* jproxy_directory = nullptr;
+  json_bool jproxy_directory_exists =
+      json_object_object_get_ex(serialized, PREPARE_SERVICE_INFO_PROXY_DIRECTORY_FIELD, &jproxy_directory);
+  if (jproxy_directory_exists) {
+    inf.proxy_directory_ = json_object_get_string(jproxy_directory);
+  }
+
   *this = inf;
   return common::Error();
 }
@@ -177,7 +192,8 @@ Directories::Directories(const PrepareInfo& sinf)
       timeshift_dir(sinf.GetTimeshiftsDirectory(), PREPARE_SERVICE_INFO_TIMESHIFTS_DIRECTORY_FIELD),
       hls_dir(sinf.GetHlsDirectory(), PREPARE_SERVICE_INFO_HLS_DIRECTORY_FIELD),
       vods_dir(sinf.GetVodsDirectory(), PREPARE_SERVICE_INFO_VODS_DIRECTORY_FIELD),
-      cods_dir(sinf.GetCodsDirectory(), PREPARE_SERVICE_INFO_CODS_DIRECTORY_FIELD) {}
+      cods_dir(sinf.GetCodsDirectory(), PREPARE_SERVICE_INFO_CODS_DIRECTORY_FIELD),
+      proxy_dir(sinf.GetCodsDirectory(), PREPARE_SERVICE_INFO_CODS_DIRECTORY_FIELD) {}
 
 std::string MakeDirectoryResponce(const Directories& dirs) {
   json_object* obj = json_object_new_array();
@@ -186,6 +202,7 @@ std::string MakeDirectoryResponce(const Directories& dirs) {
   json_object_array_add(obj, MakeDirectoryStateResponce(dirs.hls_dir));
   json_object_array_add(obj, MakeDirectoryStateResponce(dirs.vods_dir));
   json_object_array_add(obj, MakeDirectoryStateResponce(dirs.cods_dir));
+  json_object_array_add(obj, MakeDirectoryStateResponce(dirs.proxy_dir));
   std::string obj_str = json_object_get_string(obj);
   json_object_put(obj);
   return obj_str;
