@@ -38,6 +38,7 @@
 #include "server/child_stream.h"
 #include "server/daemon/client.h"
 #include "server/daemon/commands.h"
+#include "server/daemon/commands_info/service/details/shots.h"
 #include "server/daemon/commands_info/service/prepare_info.h"
 #include "server/daemon/commands_info/service/server_info.h"
 #include "server/daemon/commands_info/service/sync_info.h"
@@ -1426,8 +1427,9 @@ std::string ProcessSlaveWrapper::MakeServiceStats(common::time64_t expiration_ti
   service::OnlineUsers online(daemons_client_count, static_cast<HttpHandler*>(http_handler_)->GetOnlineClients(),
                               static_cast<HttpHandler*>(vods_handler_)->GetOnlineClients(),
                               static_cast<HttpHandler*>(cods_handler_)->GetOnlineClients());
-  service::ServerInfo stat(cpu_load, node_stats_->gpu_load, uptime_str, mem_shot, hdd_shot, bytes_recv / ts_diff,
-                           bytes_send / ts_diff, sshot, current_time, online);
+  service::ServerInfo stat(cpu_load, node_stats_->gpu_load, uptime_str, mem_shot.ram_bytes_total,
+                           mem_shot.ram_bytes_free, hdd_shot.hdd_bytes_total, hdd_shot.hdd_bytes_free,
+                           bytes_recv / ts_diff, bytes_send / ts_diff, sshot.uptime, current_time, online);
 
   std::string node_stats;
   if (expiration_time != 0) {

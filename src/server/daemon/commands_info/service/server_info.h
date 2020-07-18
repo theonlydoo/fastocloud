@@ -14,15 +14,7 @@
 
 #pragma once
 
-#include <string>
-
-#include <common/net/types.h>
-#include <common/serializer/json_serializer.h>
-
-#include <fastotv/commands_info/operation_system_info.h>
-#include <fastotv/types.h>
-
-#include "server/daemon/commands_info/service/details/shots.h"
+#include <fastotv/commands_info/machine_info.h>
 
 namespace fastocloud {
 namespace server {
@@ -45,31 +37,23 @@ class OnlineUsers : public common::serializer::JsonSerializer<OnlineUsers> {
   size_t cods_;
 };
 
-class ServerInfo : public common::serializer::JsonSerializer<ServerInfo> {
+class ServerInfo : public fastotv::commands_info::MachineInfo {
  public:
-  typedef JsonSerializer<ServerInfo> base_class;
-  typedef double cpu_load_t;
-  typedef double gpu_load_t;
+  typedef fastotv::commands_info::MachineInfo base_class;
   ServerInfo();
   ServerInfo(cpu_load_t cpu_load,
              gpu_load_t gpu_load,
-             const std::string& uptime,
-             const MemoryShot& mem_shot,
-             const HddShot& hdd_shot,
+             const std::string& load_average,
+             size_t ram_bytes_total,
+             size_t ram_bytes_free,
+             size_t hdd_bytes_total,
+             size_t hdd_bytes_free,
              fastotv::bandwidth_t net_bytes_recv,
              fastotv::bandwidth_t net_bytes_send,
-             const SysinfoShot& sys,
+             time_t uptime,
              fastotv::timestamp_t timestamp,
              const OnlineUsers& online_users);
 
-  cpu_load_t GetCpuLoad() const;
-  gpu_load_t GetGpuLoad() const;
-  std::string GetUptime() const;
-  MemoryShot GetMemShot() const;
-  HddShot GetHddShot() const;
-  fastotv::bandwidth_t GetNetBytesRecv() const;
-  fastotv::bandwidth_t GetNetBytesSend() const;
-  fastotv::timestamp_t GetTimestamp() const;
   OnlineUsers GetOnlineUsers() const;
 
  protected:
@@ -77,15 +61,6 @@ class ServerInfo : public common::serializer::JsonSerializer<ServerInfo> {
   common::Error SerializeFields(json_object* out) const override;
 
  private:
-  cpu_load_t cpu_load_;
-  gpu_load_t gpu_load_;
-  std::string uptime_;
-  MemoryShot mem_shot_;
-  HddShot hdd_shot_;
-  fastotv::bandwidth_t net_bytes_recv_;
-  fastotv::bandwidth_t net_bytes_send_;
-  fastotv::timestamp_t current_ts_;
-  SysinfoShot sys_shot_;
   OnlineUsers online_users_;
 };
 
