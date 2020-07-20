@@ -20,6 +20,7 @@ RUN groupadd -r $USER && useradd -r -g $USER $USER \
   && pip3 install setuptools \
   && mkdir -p $PYFASTOGT_DIR \
   && git clone https://github.com/fastogt/pyfastogt $PYFASTOGT_DIR \
+  && git submodule update --init --recursive \
   && cd $PYFASTOGT_DIR \
   && python3 setup.py install  \
   && cd $PROJECT_DIR/build \
